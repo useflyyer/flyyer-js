@@ -1,0 +1,79 @@
+{
+  "name": "@flayyer/flayyer",
+  "version": "0.0.0",
+  "description": "FLAYYER.com helper classes and methods",
+  "keywords": [
+    "flayyer"
+  ],
+  "main": "dist/flayyer.umd.js",
+  "module": "dist/flayyer.es5.js",
+  "typings": "dist/types/flayyer.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "Patricio López Juri <patricio@flayyer.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flayyer/flayyer-js.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "start": "rollup -c rollup.config.ts -w",
+    "lint": "eslint '*/**/*.{js,ts,tsx}'",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ]
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@types/qs": "^6.9.4",
+    "qs": "^6.9.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "jest": "^26.2.2",
+    "jest-config": "^26.2.2",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.23.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "ts-jest": "^26.1.4",
+    "ts-node": "^8.10.2",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-config-standard": "^9.0.0",
+    "typescript": "^3.0.3"
+  }
+}
