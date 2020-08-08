@@ -75,7 +75,7 @@ console.log(decodeURI(url));
 In plain Node.js you can import this module as:
 
 ```js
-const Flayyer = require("@flayyer/flayyer");
+const Flayyer = require("@flayyer/flayyer").default;
 ```
 
 ## Development
