@@ -7,7 +7,7 @@ describe("Flayyer", () => {
   });
 
   it("raises error if missing arguments", () => {
-    const executer = (args?: any) => new Flayyer(args).href;
+    const executer = (args?: any) => new Flayyer(args).href();
 
     expect(() => executer()).toThrow("Flayyer constructor must not be empty");
     expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
@@ -24,7 +24,10 @@ describe("Flayyer", () => {
       },
     });
 
-    const href = flayyer.href;
+    const href = flayyer.href();
+
+    const a = flayyer.clone();
+
     expect(href.startsWith("https://flayyer.host/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
     expect(href.includes("&title=Hello+world%21")).toBeTruthy();
   });

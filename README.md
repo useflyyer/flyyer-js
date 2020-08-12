@@ -43,7 +43,7 @@ const flayyer = new Flayyer({
 });
 
 // Use this image in your <head/> tags
-const url = flayyer.href;
+const url = flayyer.href();
 // > https://flayyer.host/v2/tenant/deck/template.jpeg?__v=1596906866&title=Hello+world%21
 ```
 
