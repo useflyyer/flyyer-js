@@ -28,7 +28,7 @@ npm install --save-dev @types/qs
 
 ## Usage
 
-After installing the gem you can format URL as:
+After installing this module you can format URLs just like this example:
 
 ```js
 import Flayyer from "@flayyer/flayyer";
