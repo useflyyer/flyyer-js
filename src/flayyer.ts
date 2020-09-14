@@ -76,11 +76,12 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
     if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
 
+    const base = "https://flayyer.host/v2";
     const query = this.querystring();
     if (this.version) {
-      return `https://flayyer.host/v2/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}?${query}`;
+      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}?${query}`;
     }
-    return `https://flayyer.host/v2/${this.tenant}/${this.deck}/${this.template}.${this.extension}?${query}`;
+    return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}?${query}`;
   }
 }
 
