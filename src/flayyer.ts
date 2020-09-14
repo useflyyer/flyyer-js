@@ -6,7 +6,7 @@ export type FlayyerVariables =
     }
   | Record<any, any>;
 
-export type FlayyerExtension = "jpeg" | "jpg" | "png";
+export type FlayyerExtension = "jpeg" | "jpg" | "png" | "webp";
 
 export type FlayyerParams<K extends FlayyerVariables> = {
   /**
