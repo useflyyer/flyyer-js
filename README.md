@@ -44,7 +44,7 @@ const flayyer = new Flayyer({
 
 // Use this image in your <head/> tags
 const url = flayyer.href();
-// > https://flayyer.host/v2/tenant/deck/template.jpeg?__v=1596906866&title=Hello+world%21
+// > https://flayyer.io/v2/tenant/deck/template.jpeg?__v=1596906866&title=Hello+world%21
 ```
 
 Variables can be complex arrays and objects.
@@ -67,7 +67,7 @@ To decode the URL for debugging purposes:
 
 ```js
 console.log(decodeURI(url));
-// > https://flayyer.host/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
+// > https://flayyer.io/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
 ```
 
 ### CommonJS

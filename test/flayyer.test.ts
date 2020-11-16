@@ -26,7 +26,7 @@ describe("Flayyer", () => {
 
     const href = flayyer.href();
 
-    expect(href.startsWith("https://flayyer.host/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
+    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
     expect(href.includes("&title=Hello+world%21")).toBeTruthy();
   });
 });

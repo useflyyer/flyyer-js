@@ -71,12 +71,16 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
     return toQuery(Object.assign(defaults, this.variables));
   }
 
+  /**
+   * Generate final URL you can use in your og:images.
+   * @example <meta property="og:image" content={flayyer.href()} />
+   */
   href(): string {
     if (isUndefined(this.tenant)) throw new Error("Missing 'tenant' property");
     if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
 
-    const base = "https://flayyer.host/v2";
+    const base = "https://flayyer.io/v2";
     const query = this.querystring();
     if (this.version) {
       return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}?${query}`;
