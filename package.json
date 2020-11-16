@@ -5,8 +5,8 @@
   "keywords": [
     "flayyer"
   ],
-  "main": "dist/flayyer.umd.js",
-  "module": "dist/flayyer.es5.js",
+  "main": "dist/flayyer.es5.js",
+  "module": "dist/flayyer.umd.js",
   "typings": "dist/types/flayyer.d.ts",
   "files": [
     "dist"

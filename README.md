@@ -78,6 +78,8 @@ In plain Node.js you can import this module as:
 const Flayyer = require("@flayyer/flayyer").default;
 ```
 
+> Please note the `.default` at the end fo the require statement
+
 ## Development
 
 Prepare the local environment:
