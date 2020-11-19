@@ -87,6 +87,14 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
     }
     return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}?${query}`;
   }
+
+  /**
+   * Generate final URL you can use in your og:images.
+   * @example <meta property="og:image" content={flayyer.href()} />
+   */
+  toString() {
+    return this.href();
+  }
 }
 
 export function toQuery(variables: any, options: IStringifyOptions = { addQueryPrefix: false, format: "RFC1738" }) {
