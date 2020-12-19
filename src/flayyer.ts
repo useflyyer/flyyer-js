@@ -1,5 +1,26 @@
 import { stringify, IStringifyOptions } from "qs";
 
+export type FlayyerMetaVariables = {
+  /**
+   * Force crawler user agent
+   */
+  agent?: string | null;
+  width?: string | number | null;
+  height?: string | number | null;
+  /**
+   * Range from [0.0, 1.0]
+   */
+  resolution?: string | number | null;
+  /**
+   * To identify your links on the analytics report
+   */
+  id?: string | number | null;
+  /**
+   * Cache invalidator
+   */
+  v?: string | number | null;
+};
+
 export type FlayyerVariables =
   | {
       [key: string]: any;
@@ -8,7 +29,7 @@ export type FlayyerVariables =
 
 export type FlayyerExtension = "jpeg" | "jpg" | "png" | "webp";
 
-export type FlayyerParams<K extends FlayyerVariables> = {
+export type FlayyerParams<T extends FlayyerVariables> = {
   /**
    * Visit https://app.flayyer.com to get this value for your project
    */
@@ -34,7 +55,12 @@ export type FlayyerParams<K extends FlayyerVariables> = {
   /**
    * JS serializable variables.
    */
-  variables?: K | null;
+  variables?: T | null;
+
+  /**
+   * Extra parameters that adds data for analytics or changes meta-information of the rendered images such as width and height.
+   */
+  meta?: FlayyerMetaVariables | null;
 };
 
 export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
@@ -47,6 +73,7 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
    * JS serializable variables.
    */
   public variables: T;
+  public meta: FlayyerMetaVariables;
 
   constructor(args: FlayyerParams<T>) {
     if (!args) throw new Error("Flayyer constructor must not be empty");
@@ -57,6 +84,7 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
     this.version = args.version || null;
     this.extension = args.extension || "jpeg";
     this.variables = args.variables || ({} as T);
+    this.meta = args.meta || {};
   }
 
   clone<K extends FlayyerVariables = T>(args?: Partial<FlayyerParams<K>>): Flayyer<K> {
@@ -66,7 +94,12 @@ export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
 
   querystring(): string {
     const defaults = {
-      __v: (new Date().getTime() / 1000).toFixed(0),
+      __v: isUndefined(this.meta.v) ? (new Date().getTime() / 1000).toFixed(0) : this.meta.v,
+      __id: this.meta.id,
+      _w: this.meta.width,
+      _h: this.meta.height,
+      _res: this.meta.resolution,
+      _ua: this.meta.agent,
     };
     return toQuery(Object.assign(defaults, this.variables));
   }

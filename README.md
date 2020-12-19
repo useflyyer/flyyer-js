@@ -4,7 +4,7 @@
 
 This module is agnostic to any JS framework and has only one peer dependency: [qs](https://github.com/ljharb/qs)
 
-To create a FLAYYER template please refer to: [flayyer.com](https://flayyer.com?ref=flayyer-js)
+To create a Flayyer template please refer to: [flayyer.com](https://flayyer.com?ref=flayyer-js)
 
 ## Installation
 
@@ -58,6 +58,9 @@ const flayyer = new Flayyer({
       { text: "Apples", count: 14 },
     ],
   },
+  meta {
+    id: "slug-or-id", // To identify the resource in our analytics report
+  }
 });
 ```
 
