@@ -31,8 +31,8 @@ describe("Flayyer", () => {
     const href = flayyer.href();
 
     expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href.includes("&title=Hello+world%21")).toBeTruthy();
-    expect(href.includes("&description=")).toBeTruthy();
+    expect(href).toEqual(expect.stringContaining("&title=Hello+world%21"));
+    expect(href).toEqual(expect.stringContaining("&description="));
     expect(href).toEqual(String(flayyer)); // test `.toString()`
   });
 
@@ -47,11 +47,10 @@ describe("Flayyer", () => {
     const href = flayyer.href();
 
     expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href.includes("&title=title")).toBeTruthy();
-    expect(href.includes("&description=")).toBeFalsy();
-    expect(href.includes("&description=undefined")).toBeFalsy();
-    expect(href.includes("&description=null")).toBeFalsy();
-    expect(href).toEqual(String(flayyer)); // test `.toString()`
+    expect(href).toEqual(expect.stringContaining("&title=title"));
+    expect(href).toEqual(expect.not.stringContaining("&description="));
+    expect(href).toEqual(expect.not.stringContaining("&description=undefined"));
+    expect(href).toEqual(expect.not.stringContaining("&description=null"));
   });
 
   it("encodes url and convert null values to empty string", () => {
@@ -65,11 +64,37 @@ describe("Flayyer", () => {
     const href = flayyer.href();
 
     expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href.includes("&title=title")).toBeTruthy();
-    expect(href.includes("&description=")).toBeTruthy();
-    expect(href.includes("&description=undefined")).toBeFalsy();
-    expect(href.includes("&description=null")).toBeFalsy();
-    expect(href).toEqual(String(flayyer)); // test `.toString()`
+    expect(href).toEqual(expect.stringContaining("&title=title"));
+    expect(href).toEqual(expect.stringContaining("&description="));
+    expect(href).toEqual(expect.not.stringContaining("&description=undefined"));
+    expect(href).toEqual(expect.not.stringContaining("&description=null"));
+  });
+
+  it("encodes url with meta values", () => {
+    const flayyer = new Flayyer({
+      ...DEFAULTS,
+      variables: {
+        title: "title",
+      },
+      meta: {
+        agent: "whatsapp",
+        height: 100,
+        width: "200",
+        id: "dev forgot to encode",
+        v: null,
+      },
+    });
+    const href = flayyer.href();
+
+    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
+    expect(href).toEqual(expect.stringContaining("&title=title"));
+    expect(href).toEqual(expect.stringContaining("_ua=whatsapp"));
+    expect(href).toEqual(expect.stringContaining("_h=100"));
+    expect(href).toEqual(expect.stringContaining("_w=200"));
+    expect(href).toEqual(expect.stringContaining("__id=dev+forgot+to+encode"));
+    // TODO: use regex to verify empty __v
+    expect(href).toEqual(expect.stringContaining("__v="));
+    expect(href).toEqual(expect.not.stringContaining("__v=1"));
   });
 });
 
