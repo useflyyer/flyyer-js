@@ -14,20 +14,61 @@ describe("Flayyer", () => {
     expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
   });
 
+  const DEFAULTS = {
+    tenant: "tenant",
+    deck: "deck",
+    template: "template",
+  };
+
   it("encodes url", () => {
-    const flayyer = new Flayyer<{ title: string }>({
-      tenant: "tenant",
-      deck: "deck",
-      template: "template",
+    const flayyer = new Flayyer({
+      ...DEFAULTS,
       variables: {
         title: "Hello world!",
+        description: "",
       },
     });
-
     const href = flayyer.href();
 
     expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
     expect(href.includes("&title=Hello+world%21")).toBeTruthy();
+    expect(href.includes("&description=")).toBeTruthy();
+    expect(href).toEqual(String(flayyer)); // test `.toString()`
+  });
+
+  it("encodes url and skips undefined values", () => {
+    const flayyer = new Flayyer({
+      ...DEFAULTS,
+      variables: {
+        title: "title",
+        description: undefined,
+      },
+    });
+    const href = flayyer.href();
+
+    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
+    expect(href.includes("&title=title")).toBeTruthy();
+    expect(href.includes("&description=")).toBeFalsy();
+    expect(href.includes("&description=undefined")).toBeFalsy();
+    expect(href.includes("&description=null")).toBeFalsy();
+    expect(href).toEqual(String(flayyer)); // test `.toString()`
+  });
+
+  it("encodes url and convert null values to empty string", () => {
+    const flayyer = new Flayyer({
+      ...DEFAULTS,
+      variables: {
+        title: "title",
+        description: null,
+      },
+    });
+    const href = flayyer.href();
+
+    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
+    expect(href.includes("&title=title")).toBeTruthy();
+    expect(href.includes("&description=")).toBeTruthy();
+    expect(href.includes("&description=undefined")).toBeFalsy();
+    expect(href.includes("&description=null")).toBeFalsy();
     expect(href).toEqual(String(flayyer)); // test `.toString()`
   });
 });
