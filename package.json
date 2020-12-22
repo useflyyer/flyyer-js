@@ -23,6 +23,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "prepublishOnly": "yarn run build",
     "start": "rollup -c rollup.config.ts -w",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "test": "jest"
