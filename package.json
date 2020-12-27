@@ -8,6 +8,7 @@
   "main": "dist/flayyer.es5.js",
   "module": "dist/flayyer.umd.js",
   "typings": "dist/types/flayyer.d.ts",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
