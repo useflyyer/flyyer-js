@@ -11,19 +11,10 @@ To create a Flayyer template please refer to: [flayyer.com](https://flayyer.com?
 This module supports Node.js, Browser and can be bundled with any tool such as Rollup, Webpack, etc.
 
 ```sh
-yarn add @flayyer/flayyer qs
+yarn add @flayyer/flayyer
 
 # or with npm:
-npm install --save @flayyer/flayyer qs
-```
-
-Types for [TypeScript](https://www.typescriptlang.org) are included, but if you have any issues try installing `qs` types:
-
-```sh
-yarn add --dev @types/qs
-
-# or with npm:
-npm install --save-dev @types/qs
+npm install --save @flayyer/flayyer
 ```
 
 ## Usage
