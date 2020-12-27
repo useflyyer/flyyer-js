@@ -1,6 +1,9 @@
 # flayyer-js
 
-[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+![npm-version](https://badgen.net/npm/v/@flayyer/flayyer)
+![downloads](https://badgen.net/npm/dt/@flayyer/flayyer)
+![size](https://badgen.net/bundlephobia/minzip/@flayyer/flayyer)
+![tree-shake](https://badgen.net/bundlephobia/tree-shaking/@flayyer/flayyer)
 
 This module is agnostic to any JS framework and has only one peer dependency: [qs](https://github.com/ljharb/qs)
 
