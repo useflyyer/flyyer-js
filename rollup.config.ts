@@ -12,7 +12,7 @@ const libraryName = "flayyer";
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: libraryName, format: "umd", sourcemap: true },
+    { file: pkg.main, name: libraryName, format: "cjs", sourcemap: true },
     { file: pkg.module, format: "es", sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
@@ -24,7 +24,7 @@ export default {
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript(),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
     // Allow node_modules resolution, so you can use 'external' to control
