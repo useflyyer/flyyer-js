@@ -25,7 +25,7 @@ npm install --save @flayyer/flayyer
 After installing this module you can format URLs just like this example:
 
 ```js
-import Flayyer from "@flayyer/flayyer";
+import { Flayyer } from "@flayyer/flayyer";
 
 const flayyer = new Flayyer({
   tenant: "tenant",

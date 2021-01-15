@@ -1,4 +1,4 @@
-import Flayyer, { toQuery } from "../src/flayyer";
+import { Flayyer, toQuery } from "../src/flayyer";
 
 describe("Flayyer", () => {
   it("Flayyer is instantiable", () => {

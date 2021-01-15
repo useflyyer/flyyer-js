@@ -63,7 +63,7 @@ export type FlayyerParams<T extends FlayyerVariables> = {
   meta?: FlayyerMetaVariables | null;
 };
 
-export default class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
+export class Flayyer<T extends FlayyerVariables = FlayyerVariables> {
   public tenant: string;
   public deck: string;
   public template: string;
@@ -137,3 +137,6 @@ export function toQuery(variables: any, options: IStringifyOptions = { addQueryP
 function isUndefined(value: any): boolean {
   return typeof value === "undefined";
 }
+
+// Will deprecate default export.
+export default Flayyer;
