@@ -99,21 +99,29 @@ describe("Flayyer", () => {
 });
 
 describe("toQuery", () => {
-  it("stringifies hash of primitives", () => {
+  it("stringifies object of primitives", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const hash = { a: "hello", b: 100, c: false, d: null, b: 999 };
-    const str = toQuery(hash);
+    const object = { a: "hello", b: 100, c: false, d: null, b: 999 };
+    const str = toQuery(object);
     expect(str).toEqual(`a=hello&b=999&c=false&d=`);
   });
 
-  it("stringifies a complex hash", () => {
-    const hash = {
+  it("stringifies a complex object", () => {
+    const object = {
       a: { aa: "bar", ab: "foo" },
       b: [{ c: "foo" }, { c: "bar" }],
     };
-    const str = toQuery(hash);
+    const str = toQuery(object);
     expect(str).not.toEqual(decodeURI(str));
     expect(decodeURI(str)).toEqual(`a[aa]=bar&a[ab]=foo&b[0][c]=foo&b[1][c]=bar`);
+  });
+
+  it("encodes special characters", () => {
+    const object = { title: "Ñandú" };
+    const str = toQuery(object);
+    expect(str).toEqual(`title=%C3%91and%C3%BA`);
+    expect(decodeURIComponent("%C3%91")).toEqual("Ñ");
+    expect(decodeURI(str)).toEqual(`title=Ñandú`);
   });
 });
