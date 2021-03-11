@@ -1,13 +1,64 @@
-import { Flayyer, toQuery } from "../src/flayyer";
+import { FlayyerIO, FlayyerAI, toQuery } from "../src/flayyer";
 
-describe("Flayyer", () => {
-  it("Flayyer is instantiable", () => {
-    const flayyer = new Flayyer({ tenant: "", deck: "", template: "" });
-    expect(flayyer).toBeInstanceOf(Flayyer);
+describe("Flayyer AI", () => {
+  it("FlayyerAI is instantiable", () => {
+    const flayyer = new FlayyerAI({ project: "" });
+    expect(flayyer).toBeInstanceOf(FlayyerAI);
   });
 
   it("raises error if missing arguments", () => {
-    const executer = (args?: any) => new Flayyer(args).href();
+    const executer = (args?: any) => new FlayyerAI(args).href();
+
+    expect(() => executer()).toThrow("Flayyer constructor must not be empty");
+    expect(() => executer({ project: "" })).not.toThrow();
+  });
+
+  it("without path fallbacks to root", () => {
+    const flayyer = new FlayyerAI({ project: "project" });
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\//);
+  });
+
+  it("handles single path", () => {
+    const flayyer = new FlayyerAI({ project: "project", path: "about" });
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/about/);
+  });
+
+  it("handles multiple paths", () => {
+    const options = [
+      ["dashboard", "company"],
+      ["/dashboard", "company"],
+      ["/dashboard", "/company"],
+      ["dashboard", false, "/company"],
+      ["/dashboard/", null, "/company/"],
+      ["dashboard///", null, undefined, false, "////company/"],
+    ];
+    for (const path of options) {
+      const flayyer = new FlayyerAI({ project: "project", path: path as any });
+      expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/dashboard\/company/);
+    }
+  });
+
+  it("can have variables as title", () => {
+    const flayyer = new FlayyerAI({ project: "project", path: "about", variables: { title: "hello world" } });
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)&title=hello\+world\/about/);
+  });
+
+  it("can have numbers in path", () => {
+    const flayyer1 = new FlayyerAI({ project: "project", path: ["products", 1] });
+    expect(flayyer1.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/1/);
+    const flayyer0 = new FlayyerAI({ project: "project", path: ["products", 0] });
+    expect(flayyer0.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/0/);
+  });
+});
+
+describe("Flayyer IO", () => {
+  it("Flayyer is instantiable", () => {
+    const flayyer = new FlayyerIO({ tenant: "", deck: "", template: "" });
+    expect(flayyer).toBeInstanceOf(FlayyerIO);
+  });
+
+  it("raises error if missing arguments", () => {
+    const executer = (args?: any) => new FlayyerIO(args).href();
 
     expect(() => executer()).toThrow("Flayyer constructor must not be empty");
     expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
@@ -21,7 +72,7 @@ describe("Flayyer", () => {
   };
 
   it("encodes url", () => {
-    const flayyer = new Flayyer({
+    const flayyer = new FlayyerIO({
       ...DEFAULTS,
       variables: {
         title: "Hello world!",
@@ -37,7 +88,7 @@ describe("Flayyer", () => {
   });
 
   it("encodes url and skips undefined values", () => {
-    const flayyer = new Flayyer({
+    const flayyer = new FlayyerIO({
       ...DEFAULTS,
       variables: {
         title: "title",
@@ -54,7 +105,7 @@ describe("Flayyer", () => {
   });
 
   it("encodes url and convert null values to empty string", () => {
-    const flayyer = new Flayyer({
+    const flayyer = new FlayyerIO({
       ...DEFAULTS,
       variables: {
         title: "title",
@@ -71,7 +122,7 @@ describe("Flayyer", () => {
   });
 
   it("encodes url with meta values", () => {
-    const flayyer = new Flayyer({
+    const flayyer = new FlayyerIO({
       ...DEFAULTS,
       variables: {
         title: "title",
