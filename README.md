@@ -11,7 +11,7 @@ To create a Flayyer template and an account please refer to: [flayyer.com](https
 
 ```tsx
 import { FlayyerIO } from "@flayyer/flayyer";
-const flayyer = new Flayyer({
+const flayyer = new FlayyerIO({
   tenant: "tenant",
   deck: "default",
   template: "main",
