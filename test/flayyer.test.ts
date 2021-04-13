@@ -15,12 +15,12 @@ describe("Flayyer AI", () => {
 
   it("without path fallbacks to root", () => {
     const flayyer = new FlayyerAI({ project: "project" });
-    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\//);
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/$/);
   });
 
   it("handles single path", () => {
     const flayyer = new FlayyerAI({ project: "project", path: "about" });
-    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/about/);
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/about$/);
   });
 
   it("handles multiple paths", () => {
@@ -34,20 +34,38 @@ describe("Flayyer AI", () => {
     ];
     for (const path of options) {
       const flayyer = new FlayyerAI({ project: "project", path: path as any });
-      expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/dashboard\/company/);
+      expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/dashboard\/company$/);
     }
   });
 
-  it("can have variables as title", () => {
-    const flayyer = new FlayyerAI({ project: "project", path: "about", variables: { title: "hello world" } });
-    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)&title=hello\+world\/about/);
+  it("handle numbers in path", () => {
+    const flayyer1 = new FlayyerAI({ project: "project", path: ["products", 1] });
+    expect(flayyer1.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/1$/);
+    const flayyer0 = new FlayyerAI({ project: "project", path: ["products", 0] });
+    expect(flayyer0.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/0$/);
+    const flayyerInf = new FlayyerAI({ project: "project", path: ["products", Infinity] });
+    expect(flayyerInf.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/Infinity$/);
+    // Ignores falsy values
+    const flayyerNaN = new FlayyerAI({ project: "project", path: ["products", NaN] });
+    expect(flayyerNaN.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products$/);
   });
 
-  it("can have numbers in path", () => {
-    const flayyer1 = new FlayyerAI({ project: "project", path: ["products", 1] });
-    expect(flayyer1.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/1/);
-    const flayyer0 = new FlayyerAI({ project: "project", path: ["products", 0] });
-    expect(flayyer0.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/0/);
+  it("handle booleans in path", () => {
+    const flayyerTrue = new FlayyerAI({ project: "project", path: ["products", true as any] });
+    expect(flayyerTrue.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products\/true$/);
+    // Ignores falsy values
+    const flayyerFalse = new FlayyerAI({ project: "project", path: ["products", false as any] });
+    expect(flayyerFalse.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/products$/);
+  });
+
+  it("handle variables such as `title`", () => {
+    const flayyer = new FlayyerAI({ project: "project", path: "about", variables: { title: "hello world" } });
+    expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)&title=hello\+world\/about$/);
+  });
+
+  it("can disable __v cache-bursting param", () => {
+    const flayyer1 = new FlayyerAI({ project: "project", meta: { v: null } });
+    expect(flayyer1.href()).toEqual("https://flayyer.ai/v2/project/_/__v=/");
   });
 });
 
@@ -80,11 +98,9 @@ describe("Flayyer IO", () => {
       },
     });
     const href = flayyer.href();
-
-    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href).toEqual(expect.stringContaining("&title=Hello+world%21"));
-    expect(href).toEqual(expect.stringContaining("&description="));
-    expect(href).toEqual(String(flayyer)); // test `.toString()`
+    expect(href).toMatch(
+      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=Hello\+world%21&description=$/,
+    );
   });
 
   it("encodes url and skips undefined values", () => {
@@ -96,12 +112,7 @@ describe("Flayyer IO", () => {
       },
     });
     const href = flayyer.href();
-
-    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href).toEqual(expect.stringContaining("&title=title"));
-    expect(href).toEqual(expect.not.stringContaining("&description="));
-    expect(href).toEqual(expect.not.stringContaining("&description=undefined"));
-    expect(href).toEqual(expect.not.stringContaining("&description=null"));
+    expect(href).toMatch(/^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=title$/);
   });
 
   it("encodes url and convert null values to empty string", () => {
@@ -113,12 +124,9 @@ describe("Flayyer IO", () => {
       },
     });
     const href = flayyer.href();
-
-    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href).toEqual(expect.stringContaining("&title=title"));
-    expect(href).toEqual(expect.stringContaining("&description="));
-    expect(href).toEqual(expect.not.stringContaining("&description=undefined"));
-    expect(href).toEqual(expect.not.stringContaining("&description=null"));
+    expect(href).toMatch(
+      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=title&description=$/,
+    );
   });
 
   it("encodes url with meta values", () => {
@@ -134,25 +142,18 @@ describe("Flayyer IO", () => {
         id: "dev forgot to encode",
         v: null,
       },
+      extension: "png",
     });
     const href = flayyer.href();
-
-    expect(href.startsWith("https://flayyer.io/v2/tenant/deck/template.jpeg?__v=")).toBeTruthy();
-    expect(href).toEqual(expect.stringContaining("&title=title"));
-    expect(href).toEqual(expect.stringContaining("_ua=whatsapp"));
-    expect(href).toEqual(expect.stringContaining("_h=100"));
-    expect(href).toEqual(expect.stringContaining("_w=200"));
-    expect(href).toEqual(expect.stringContaining("__id=dev+forgot+to+encode"));
-    // TODO: use regex to verify empty __v
-    expect(href).toEqual(expect.stringContaining("__v="));
-    expect(href).toEqual(expect.not.stringContaining("__v=1"));
+    expect(href).toMatch(
+      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__v=&__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&title=title$/,
+    );
   });
 });
 
 describe("toQuery", () => {
   it("stringifies object of primitives", () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error will complain about duplicate identifier `b`
     const object = { a: "hello", b: 100, c: false, d: null, b: 999 };
     const str = toQuery(object);
     expect(str).toEqual(`a=hello&b=999&c=false&d=`);
@@ -174,5 +175,12 @@ describe("toQuery", () => {
     expect(str).toEqual(`title=%C3%91and%C3%BA`);
     expect(decodeURIComponent("%C3%91")).toEqual("Ñ");
     expect(decodeURI(str)).toEqual(`title=Ñandú`);
+  });
+
+  it("encodes Date", () => {
+    const now = new Date();
+    const object = { timestamp: now };
+    const str = toQuery(object);
+    expect(str).toEqual(`timestamp=${encodeURIComponent(now.toISOString())}`);
   });
 });

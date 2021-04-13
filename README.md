@@ -9,6 +9,20 @@ This module is agnostic to any JS framework and has only one peer dependency: [q
 
 To create a Flayyer template and an account please refer to: [flayyer.com](https://flayyer.com?ref=flayyer-js)
 
+```tsx
+import { FlayyerIO } from "@flayyer/flayyer";
+const flayyer = new Flayyer({
+  tenant: "tenant",
+  deck: "default",
+  template: "main",
+  variables: { title: "try changing this" },
+});
+const url = flayyer.href()
+// https://flayyer.io/v2/flayyer/default/main.jpeg?title=try+changing+this
+```
+
+[![Resultant flayyer live image](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/result-1.png?raw=true&v=1)](https://flayyer.io/v2/flayyer/default/main.jpeg?title=try+changing+this)
+
 ## Installation
 
 This module supports Node.js, Browser and can be bundled with any tool such as Rollup, Webpack, etc and includes Typescript definitions.
@@ -26,6 +40,11 @@ The main difference between `Flayyer.io` and `Flayyer.ai` is:
 
 * **Flayyer.io requires you to explicitly declare template and variables for the images to render**.
 * **Flayyer.ai uses the [rules defined on your dashboard](https://flayyer.com/dashboard/_/projects) to decide how to handle every image**, then fetches and analyse the website for variables and information to render the image.
+
+In simple words:
+
+* Flayyer.io like saying _"render an image with using this template and these explicit variables."_
+* Flayyer.ai like saying _"render images based on the content of this route."_
 
 ### Flayyer.ai
 
@@ -46,6 +65,7 @@ function Head() {
   return (
     <head>
       <meta property="og:image" content={url} />
+      <meta name="twitter:image" content={url} />
       {/* Declare the original image so you can use it on your templates */}
       <meta property="flayyer:image" content="https://yoursite.com/image/products/1.png" />
     </head>
@@ -70,16 +90,18 @@ function SEO() {
 }
 ```
 
+> Read more about integration guides here: https://docs.flayyer.com/guides
+
 ### Flayyer.io
 
 After installing this module you can format URLs. Here is an example with React.js, but note this can be used with any framework:
 
 ```jsx
 import React from "react";
-import { Flayyer } from "@flayyer/flayyer";
+import { FlayyerIO } from "@flayyer/flayyer";
 
 function Head() {
-  const flayyer = new Flayyer({
+  const flayyer = new FlayyerIO({
     tenant: "tenant",
     deck: "deck",
     template: "template",
@@ -94,6 +116,7 @@ function Head() {
   return (
     <head>
       <meta property="og:image" content={url} />
+      <meta name="twitter:image" content={url} />
     </head>
   );
 }
@@ -102,7 +125,7 @@ function Head() {
 Variables can be complex arrays and objects.
 
 ```js
-const flayyer = new Flayyer({
+const flayyer = new FlayyerIO({
   // ...
   variables: {
     items: [
@@ -130,8 +153,32 @@ console.log(decodeURI(url));
 In plain Node.js you can import this module as:
 
 ```js
-const { Flayyer, FlayyerAI } = require("@flayyer/flayyer");
+const { FlayyerIO, FlayyerAI } = require("@flayyer/flayyer");
 ```
+
+## Render images
+
+You can use the resulting URL to render images of different sizes.
+
+Change the size using:
+
+```tsx
+const flayyer = new FlayyerIO({
+    tenant: "tenant",
+    deck: "default",
+    template: "main",
+    variables: {
+      title: "Awesome 😃",
+      description: "Optional description",
+    },
+    meta: {
+      width: 1080, // in pixels
+      height: 1920, // in pixels
+    }
+  });
+```
+
+[![Resultant flayyer live image](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://flayyer.io/v2/flayyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
 
 ## FAQ
 
@@ -139,9 +186,13 @@ const { Flayyer, FlayyerAI } = require("@flayyer/flayyer");
 
 See [Usage](#usage) 👆
 
-### Is it compatible with Vue and other frameworks?
+### Is it compatible with Vue, Express and other frameworks?
 
 This is framework-agnostic, you can use this library on any framework on any platform.
+
+### How to configure Flayyer.ai?
+
+Visit your [project rules and settings](https://flayyer.com/dashboard/_/projects) on the Flayyer Dashboard.
 
 ### What if the `__v=` thing?
 
