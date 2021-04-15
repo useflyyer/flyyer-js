@@ -64,8 +64,14 @@ describe("Flayyer AI", () => {
   });
 
   it("can disable __v cache-bursting param", () => {
+    const flayyer0 = new FlayyerAI({ project: "project", meta: { v: undefined } });
+    expect(flayyer0.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/$/);
     const flayyer1 = new FlayyerAI({ project: "project", meta: { v: null } });
-    expect(flayyer1.href()).toEqual("https://flayyer.ai/v2/project/_/__v=/");
+    expect(flayyer1.href()).toEqual("https://flayyer.ai/v2/project/_/_/");
+    const flayyer2 = new FlayyerAI({ project: "project", meta: { v: "" } });
+    expect(flayyer2.href()).toEqual("https://flayyer.ai/v2/project/_/__v=/");
+    const flayyer3 = new FlayyerAI({ project: "project", meta: { v: false as any } });
+    expect(flayyer3.href()).toEqual("https://flayyer.ai/v2/project/_/__v=false/");
   });
 });
 
@@ -146,7 +152,7 @@ describe("Flayyer IO", () => {
     });
     const href = flayyer.href();
     expect(href).toMatch(
-      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__v=&__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&title=title$/,
+      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&title=title$/,
     );
   });
 });
@@ -154,7 +160,7 @@ describe("Flayyer IO", () => {
 describe("toQuery", () => {
   it("stringifies object of primitives", () => {
     // @ts-expect-error will complain about duplicate identifier `b`
-    const object = { a: "hello", b: 100, c: false, d: null, b: 999 };
+    const object = { a: "hello", b: 100, c: false, d: null, e: undefined, b: 999 };
     const str = toQuery(object);
     expect(str).toEqual(`a=hello&b=999&c=false&d=`);
   });
