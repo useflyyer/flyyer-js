@@ -229,7 +229,7 @@ export class FlayyerIO<T extends FlayyerVariables = FlayyerVariables> implements
     return next;
   }
 
-  querystring(): string {
+  querystring(extra?: any, options?: IStringifyOptions): string {
     const defaults = {
       __v: __V(this.meta.v),
       __id: this.meta.id,
@@ -238,7 +238,7 @@ export class FlayyerIO<T extends FlayyerVariables = FlayyerVariables> implements
       _res: this.meta.resolution,
       _ua: this.meta.agent,
     };
-    return toQuery(Object.assign(defaults, this.variables));
+    return toQuery(Object.assign(defaults, this.variables, extra), options);
   }
 
   /**
@@ -255,11 +255,11 @@ export class FlayyerIO<T extends FlayyerVariables = FlayyerVariables> implements
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
 
     const base = "https://flayyer.io/v2";
-    const query = this.querystring();
+    const query = this.querystring(undefined, { addQueryPrefix: true });
     if (this.version) {
-      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}?${query}`;
+      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}${query}`;
     }
-    return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}?${query}`;
+    return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}${query}`;
   }
 
   /**
@@ -387,8 +387,8 @@ export default FlayyerIO;
 /**
  * Internally used to convert an object to querystring.
  */
-export function toQuery(variables: any, options: IStringifyOptions = { addQueryPrefix: false, format: "RFC1738" }) {
-  return stringify(variables, options);
+export function toQuery(variables: any, options?: IStringifyOptions) {
+  return stringify(variables, Object.assign({ addQueryPrefix: false, format: "RFC1738" }, options));
 }
 
 /**

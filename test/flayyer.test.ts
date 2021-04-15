@@ -95,6 +95,14 @@ describe("Flayyer IO", () => {
     template: "template",
   };
 
+  it("no queryparams no '?'", () => {
+    const flayyer = new FlayyerIO({
+      ...DEFAULTS,
+      meta: { v: null },
+    });
+    expect(flayyer.href()).toEqual("https://flayyer.io/v2/tenant/deck/template.jpeg");
+  });
+
   it("encodes url", () => {
     const flayyer = new FlayyerIO({
       ...DEFAULTS,
