@@ -460,7 +460,7 @@ export function isEqualFlayyerVariables<T extends FlayyerVariables = FlayyerVari
  * Compare two `FlayyerMetaVariables` object. Ignores `__v` param.
  */
 export function isEqualFlayyerMeta(ameta: FlayyerMetaVariables, bmeta: FlayyerMetaVariables): boolean {
-  const metas = ["width", "height", "agent", "id", "resolution"] as const;
+  const metas = ["width", "height", "agent", "id", "locale", "resolution"] as const;
   for (const meta of metas) {
     if (ameta[meta] !== bmeta[meta]) {
       return false;
