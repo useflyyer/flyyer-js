@@ -419,3 +419,70 @@ export function __V(v?: FlayyerMetaVariables["v"]) {
 function isUndefined(value: any): boolean {
   return typeof value === "undefined";
 }
+
+/**
+ * Fast shallow compare of objects.
+ */
+export function isEqualFlayyerVariables<T extends FlayyerVariables = FlayyerVariables>(a: T, b: T): boolean {
+  if (a === b) return true;
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
+  for (let i = 0, l = aKeys.length; i < l; i++) {
+    const key = aKeys[i];
+    // @ts-expect-error Expect it
+    // eslint-disable-next-line no-prototype-builtins
+    if (!b.hasOwnProperty(aKeys[i])) {
+      return false;
+    }
+
+    // @ts-expect-error Expect it
+    const aValue = a[key];
+    // @ts-expect-error Expect it
+    const bValue = b[key];
+    if (aValue !== bValue) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Compare two `FlayyerMetaVariables` object. Ignores `__v` param.
+ */
+export function isEqualFlayyerMeta(ameta: FlayyerMetaVariables, bmeta: FlayyerMetaVariables): boolean {
+  const metas = ["width", "height", "agent", "id", "resolution"] as const;
+  for (const meta of metas) {
+    if (ameta[meta] !== bmeta[meta]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Compare two FlayyerIO instances. Ignores `__v` param.
+ */
+export function isEqualFlayyerIO(a: FlayyerIO, b: FlayyerIO, variablesCompareFn = isEqualFlayyerVariables): boolean {
+  if (a === b) return true;
+  const attrs = ["tenant", "deck", "template", "version", "extension"] as const;
+  for (const attr of attrs) {
+    if (a[attr] !== b[attr]) {
+      return false;
+    }
+  }
+  return isEqualFlayyerMeta(a.meta, b.meta) && variablesCompareFn(a.variables, b.variables);
+}
+
+/**
+ * Compare two FlayyerAI instances. Ignores `__v` param.
+ */
+export function isEqualFlayyerAI(a: FlayyerAI, b: FlayyerAI, variablesCompareFn = isEqualFlayyerVariables): boolean {
+  if (a === b) return true;
+  if (a.project !== b.project || a.extension !== b.extension || normalizePath(a.path) !== normalizePath(b.path)) {
+    return false;
+  }
+  return isEqualFlayyerMeta(a.meta, b.meta) && variablesCompareFn(a.variables, b.variables);
+}

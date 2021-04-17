@@ -1,4 +1,4 @@
-import { FlayyerIO, FlayyerAI, toQuery } from "../src/flayyer";
+import { FlayyerIO, FlayyerAI, toQuery, isEqualFlayyerAI, isEqualFlayyerIO } from "../src/flayyer";
 
 describe("Flayyer AI", () => {
   it("FlayyerAI is instantiable", () => {
@@ -72,6 +72,21 @@ describe("Flayyer AI", () => {
     expect(flayyer2.href()).toEqual("https://flayyer.ai/v2/project/_/__v=/");
     const flayyer3 = new FlayyerAI({ project: "project", meta: { v: false as any } });
     expect(flayyer3.href()).toEqual("https://flayyer.ai/v2/project/_/__v=false/");
+  });
+
+  it("compares two instances", async () => {
+    const flayyer0 = new FlayyerAI({
+      project: "project",
+      path: "products/1",
+      variables: { title: "Hello" },
+      meta: { v: "anything" },
+    });
+    const flayyer1 = new FlayyerAI({ project: "project", path: ["/products", "1"], variables: { title: "Hello" } });
+    const flayyer2 = new FlayyerAI({ project: "project", path: ["/products", "1"], variables: { title: "Bye" } });
+    expect(flayyer0.href()).not.toEqual(flayyer1.href()); // different __v
+    expect(isEqualFlayyerAI(flayyer0, flayyer0)).toEqual(true);
+    expect(isEqualFlayyerAI(flayyer0, flayyer1)).toEqual(true);
+    expect(isEqualFlayyerAI(flayyer0, flayyer2)).toEqual(false);
   });
 });
 
@@ -162,6 +177,20 @@ describe("Flayyer IO", () => {
     expect(href).toMatch(
       /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&title=title$/,
     );
+  });
+
+  it("compares two instances", async () => {
+    const flayyer0 = new FlayyerIO({
+      ...DEFAULTS,
+      variables: { title: "Hello" },
+      meta: { v: "anything" },
+    });
+    const flayyer1 = new FlayyerIO({ ...DEFAULTS, variables: { title: "Hello" } });
+    const flayyer2 = new FlayyerIO({ ...DEFAULTS, variables: { title: "Bye" } });
+    expect(flayyer0.href()).not.toEqual(flayyer1.href()); // different __v
+    expect(isEqualFlayyerIO(flayyer0, flayyer0)).toEqual(true);
+    expect(isEqualFlayyerIO(flayyer0, flayyer1)).toEqual(true);
+    expect(isEqualFlayyerIO(flayyer0, flayyer2)).toEqual(false);
   });
 });
 
