@@ -32,6 +32,12 @@ export interface FlayyerMetaVariables {
    * "instagram" // _ua=instagram
    */
   agent?: string | null;
+  /*
+   * Force language instead of using the viewer's locale.
+   * This is useful when you have your website with international routes (eg: `example.com/de` or `de.example.com`)
+   * Converted to `_loc=` on `flayyer.href()` if set.
+   */
+  locale?: string | null;
   /**
    * Pixels (integer value).
    * Converted to `_w=` on `flayyer.href()` if set.
@@ -237,6 +243,7 @@ export class FlayyerIO<T extends FlayyerVariables = FlayyerVariables> implements
       _h: this.meta.height,
       _res: this.meta.resolution,
       _ua: this.meta.agent,
+      _loc: this.meta.locale,
     };
     return toQuery(Object.assign(defaults, this.variables, extra), options);
   }
@@ -453,7 +460,7 @@ export function isEqualFlayyerVariables<T extends FlayyerVariables = FlayyerVari
  * Compare two `FlayyerMetaVariables` object. Ignores `__v` param.
  */
 export function isEqualFlayyerMeta(ameta: FlayyerMetaVariables, bmeta: FlayyerMetaVariables): boolean {
-  const metas = ["width", "height", "agent", "id", "resolution"] as const;
+  const metas = ["width", "height", "agent", "id", "locale", "resolution"] as const;
   for (const meta of metas) {
     if (ameta[meta] !== bmeta[meta]) {
       return false;
