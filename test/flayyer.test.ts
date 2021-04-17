@@ -151,6 +151,7 @@ describe("Flayyer IO", () => {
       },
       meta: {
         agent: "whatsapp",
+        locale: "es-CL",
         height: 100,
         width: "200",
         id: "dev forgot to encode",
@@ -160,7 +161,7 @@ describe("Flayyer IO", () => {
     });
     const href = flayyer.href();
     expect(href).toMatch(
-      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&title=title$/,
+      /^https:\/\/flayyer.io\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&_loc=es-CL&title=title$/,
     );
   });
 });
