@@ -156,6 +156,20 @@ In plain Node.js you can import this module as:
 const { FlayyerIO, FlayyerAI } = require("@flayyer/flayyer");
 ```
 
+### Equality helpers
+
+Helpers to compare instances (ignores `__v` param and performs a shallow compare of `variables`).
+
+```tsx
+import {
+  isEqualFlayyerIO,
+  isEqualFlayyerAI,
+  isEqualFlayyerMeta,
+} from "@flayyer/flayyer";
+
+const boolean = isEqualFlayyerIO(fio1, fio2);
+```
+
 ## Render images
 
 You can use the resulting URL to render images of different sizes.
