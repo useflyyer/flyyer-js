@@ -1,6 +1,6 @@
 {
   "name": "@flayyer/flayyer",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Flayyer.com helper classes and methods to generate smart URL to render images.",
   "keywords": [
     "flayyer"
