@@ -54,7 +54,7 @@ console.log(flayyer.href());
 
 #### 2.1 Next.js
 
-Remember to dynamically get the current path for each page. If you are using [Next.js](https://nextjs.org/) you should probably do it like this:
+Remember to dynamically get the current path for each page. If you are using [Next.js](https://nextjs.org/) you should probably do this:
 
 ```tsx
 import { useRouter } from 'next/router'
