@@ -2,11 +2,14 @@
 
 ![npm-version](https://badgen.net/npm/v/@flayyer/flayyer) ![downloads](https://badgen.net/npm/dt/@flayyer/flayyer) ![size](https://badgen.net/bundlephobia/minzip/@flayyer/flayyer) ![tree-shake](https://badgen.net/bundlephobia/tree-shaking/@flayyer/flayyer)
 
-The AI-powered preview system built from your website (no effort required).
+Format URLs to generate social media images using Flayyer.com.
+
+**To create templates with React.js or Vue.js use [create-flayyer-app](https://github.com/flayyer/create-flayyer-app) 👈**
 
 ![Flayyer live image](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/website-to-preview.png?raw=true&v=1)
 
-**This gem is agnostic to any JS framework and has only one peer dependency: [qs](https://github.com/ljharb/qs).**
+**This module is agnostic to any JS framework and has only one dependency: [qs](https://github.com/ljharb/qs).**
+
 ## Index
 
 - [Get started (5 minutes)](#get-started-5-minutes)
@@ -18,9 +21,7 @@ The AI-powered preview system built from your website (no effort required).
 
 ## Get started (5 minutes)
 
-Haven't registered your website yet? Go to [Flayyer.com](https://flayyer.com?ref=flayyer-ruby) and create a project (e.g. `website-com`).
-
-### 1. Install the library
+### 1. Install module
 
 This module supports Node.js, Browser and can be bundled with any tool such as Rollup, Webpack, etc and includes Typescript definitions.
 
@@ -31,42 +32,60 @@ yarn add @flayyer/flayyer
 npm install --save @flayyer/flayyer
 ```
 
-### 2. Get your Flayyer.ai smart image link
+### 2. Flayyer.ai smart image link
 
-In your website code (e.g. your landing or product/post view file), set the following:
+> Haven't registered your website yet? Go to [Flayyer.com](https://flayyer.com/get-started?ref=flayyer-js) and import your website to create a project (e.g. `website-com`).
 
-```jsx
+For each of your routes, create an instance.
+
+```tsx
 import { FlayyerAI } from "@flayyer/flayyer";
 
 const flayyer = new FlayyerAI({
   // Your project slug
   project: "website-com",
-  // The current path of your website
-  path: `/path/to/product`, // in Next.js you can use `useRouter().asPath`, remember to `import { useRouter } from next/router`
+  // Relative path
+  path: `/path/to/product`,
 });
 
-// Check:
 console.log(flayyer.href());
 // > https://flayyer.ai/v2/website-com/_/__v=1618281823/path/to/product
 ```
 
-### 3. Put your smart image link in your `<head>` tags
+#### 2.1 Next.js
 
-You'll get the best results like this:
+Remember to dynamically get the current path for each page. If you are using [Next.js](https://nextjs.org/) you should probably do it like this:
 
-```jsx
+```tsx
+import { useRouter } from 'next/router'
+
+function SEO() {
+  const router = useRouter();
+  const flayyer = new FlayyerAI({
+    project: "my-project",
+    path: router.asPath,
+  });
+  // ...
+}
+```
+
+### 3. Setup `<head>` meta tags
+
+You'll get the best results doing this:
+
+```tsx
 <meta property="og:image" content={flayyer.href()} />
 <meta name="twitter:image" content={flayyer.href()} />
 <meta name="twitter:card" content="summary_large_image" />
 ```
 
-### 4. Create a `rule` for your project
+### 4. Manage rules
 
-Login at [Flayyer.com](https://flayyer.com?ref=flayyer-ruby) > Go to your Dashboard > Manage rules and create a rule like the following:
+Login at [Flayyer.com](https://flayyer.com?ref=flayyer-js) > Go to your Dashboard > Manage rules and create a rule like the following:
 
-[![Flayyer basic rule example](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/rule-example.png?raw=true&v=1)](https://flayyer.com/dashboard)
+[![Flayyer basic rule example](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/rule-example.png?raw=true&v=1)](https://flayyer.com/dashboard/)
 
-Voilà!
+Voilà! **To create templates with React.js or Vue.js use [create-flayyer-app](https://github.com/flayyer/create-flayyer-app) 👈**
 
 ## Advanced usage
 
@@ -82,43 +101,38 @@ Here you have a detailed full example for project `website-com` and path `/path/
 import { FlayyerAI } from "@flayyer/flayyer";
 
 const flayyer = new FlayyerAI({
-  // [Required] Your project slug, find it in your dashboard https://flayyer.com/dashboard/.
+  // Project slug, find it in your dashboard https://flayyer.com/dashboard/.
   project: "website-com",
-  // [Recommended] The current path of your website (by default it's `/`).
+  // The current path of your website (by default it's `/`).
   path: "/path/to/product",
+
   // [Optional] In case you want to provide information that is not present in your page set it here.
   variables: {
     title: "Product name",
     img: "https://flayyer.com/img/marketplace/flayyer-banner.png",
   },
-  // [Optional] Custom metadata for rendering the image. ID is recommended so we provide you with better statistics.
+  // [Optional] Additional variables.
   meta: {
-    id: "jeans-123", // recommended for better stats (e.g. product SKU)
-    v: "12369420123", // specific handler version, by default it's a random number to circumvent platforms' cache,
-    width: 1200,
-    height: 600,
-    resolution: 0.9, // from 0.0 to 1.0
-    agent: "whatsapp", // force dimensions for specific platform
+    id: "jeans-123", // stats identifier (e.g. product SKU), defaults to `path`.
+    width: 1080, // force width (pixels).
+    height: 1080, // force height (pixels).
+    v: null, // cache-burst, to circumvent platforms' cache, default to a timestamp, null to disable.
   },
 });
-
-// Use this image in your <head/> tags (og:image & twitter:image)
-console.log(flayyer.href)
-// > https://flayyer.ai/v2/website-com/_/__id=jeans-123&__v=1618281823&img=https%3A%2F%2Fflayyer.com%2Fimg%2Fmarketplace%2Fflayyer-banner.png&title=Product+name/path/to/product
 ```
 
 > Read more about integration guides here: https://docs.flayyer.com/guides
 
-### Flayyer.io
+## Flayyer.io
 
-As you probably realized, Flayyer.ai uses the [rules defined on your dashboard](https://flayyer.com/dashboard/_/projects) to decide how to handle every image based on path patterns. It fetches and analyse your website to obtain information and rendering a content-rich image increasing the click-through-rate with no effort. Let's say _"FlayyerAI renders images based on the content of this route"_.
+* Flayyer.ai uses the [rules defined on your dashboard](https://flayyer.com/dashboard/_/projects) to decide how to handle every image based on path patterns. It fetches and analyse your website to obtain information and render a content-rich image. Let's say _"FlayyerAI renders images based on the content of this route"_.
 
-Flayyer.io instead requires you to explicitly declare template and variables for the images to render, **giving you more control for customization**. Let's say _"FlayyerIO renders an image using this template and these explicit variables"_.
+* Flayyer.io instead requires you to explicitly declare template and variables for the images to render, **giving you more control for customization**. Let's say _"FlayyerIO renders an image using this template and these explicit variables"_.
 
 ```tsx
 import { FlayyerIO } from "@flayyer/flayyer";
 const flayyer = new FlayyerIO({
-  tenant: "tenant",
+  tenant: "flayyer",
   deck: "default",
   template: "main",
   variables: { title: "try changing this" },
@@ -131,7 +145,7 @@ const url = flayyer.href()
 
 After installing this module you can format URLs. Here is an example with React.js, but note this can be used with any framework:
 
-```jsx
+```tsx
 import React from "react";
 import { FlayyerIO } from "@flayyer/flayyer";
 
@@ -146,7 +160,6 @@ function Head() {
     },
   });
   const url = flayyer.href();
-  // > https://flayyer.io/v2/tenant/deck/template.jpeg?__v=1596906866&title=Hello+world%21&image=...
 
   return (
     <head>
@@ -177,25 +190,32 @@ const flayyer = new FlayyerIO({
 
 **IMPORTANT: variables must be serializable.**
 
-You can **resize the image** like the following:
+You can **set image dimensions**, note if your are planing to use this as `<img src={flayyer.href()} />` you should disable cache-bursting.
 
 ```tsx
 const flayyer = new FlayyerIO({
-    tenant: "tenant",
-    deck: "default",
-    template: "main",
-    variables: {
-      title: "Awesome 😃",
-      description: "Optional description",
-    },
-    meta: {
-      width: 1080, // in pixels
-      height: 1920, // in pixels
-    }
-  });
+  tenant: "tenant",
+  deck: "default",
+  template: "main",
+  variables: {
+    title: "Awesome 😃",
+    description: "Optional description",
+  },
+  meta: {
+    v: null, // prevent cache-bursting in browsers
+    width: 1080, // in pixels
+    height: 1920, // in pixels
+  }
+});
+
+<img src={flayyer.href()}>
 ```
 
 [![Resultant flayyer live image](https://github.com/flayyer/create-flayyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://flayyer.io/v2/flayyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
+
+**To create templates with React.js or Vue.js use [create-flayyer-app](https://github.com/flayyer/create-flayyer-app) 👈**
+
+---
 
 ## Development
 
