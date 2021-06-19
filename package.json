@@ -61,23 +61,23 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "@flayyer/eslint-config": "^1.1.2",
+    "@flayyer/eslint-config": "^1.1.3",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.6.1",
-    "eslint": "^7.27.0",
+    "@types/node": "^15.12.4",
+    "eslint": "^7.29.0",
     "husky": "^4.3.7",
-    "jest": "^27.0.3",
+    "jest": "^27.0.4",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.50.5",
+    "rollup": "^2.52.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.30.0",
-    "ts-jest": "^27.0.2",
+    "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.4"
   }
 }
