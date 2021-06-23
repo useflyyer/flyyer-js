@@ -228,10 +228,11 @@ export class FlayyerIO<T extends FlayyerVariables = FlayyerVariables> implements
   }
 
   /**
-   * Returns a new instance. Values are shallow cloned.
+   * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
+   * **Be aware `variables` are shallow cloned.**
    */
   clone<K extends FlayyerVariables = T>(args?: Partial<FlayyerIOParams<K>>): FlayyerIO<K> {
-    const next = new FlayyerIO<K>(Object.assign({}, this, args));
+    const next = new FlayyerIO<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
     return next;
   }
 
@@ -336,10 +337,11 @@ export class FlayyerAI<T extends FlayyerVariables = FlayyerVariables> implements
   }
 
   /**
-   * Returns a new instance. Values are shallow cloned.
+   * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
+   * **Be aware `variables` are shallow cloned.**
    */
   clone<K extends FlayyerVariables = T>(args?: Partial<FlayyerAIParams<K>>): FlayyerAI<K> {
-    const next = new FlayyerAI<K>(Object.assign({}, this, args));
+    const next = new FlayyerAI<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
     return next;
   }
 

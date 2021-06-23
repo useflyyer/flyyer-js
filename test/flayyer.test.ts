@@ -13,6 +13,15 @@ describe("Flayyer AI", () => {
     expect(() => executer({ project: "" })).not.toThrow();
   });
 
+  it("shallow clones properties but deep clones 'meta' property", () => {
+    const flayyer = new FlayyerAI({ project: "project", meta: { width: 1080 } });
+    const clone = flayyer.clone();
+    clone.project = "flayyer";
+    clone.meta.width = 400;
+    expect(clone.project).not.toEqual(flayyer.project);
+    expect(clone.meta.width).not.toEqual(flayyer.meta.width);
+  });
+
   it("without path fallbacks to root", () => {
     const flayyer = new FlayyerAI({ project: "project" });
     expect(flayyer.href()).toMatch(/^https:\/\/flayyer.ai\/v2\/project\/_\/__v=(\d+)\/$/);
@@ -102,6 +111,15 @@ describe("Flayyer IO", () => {
     expect(() => executer()).toThrow("Flayyer constructor must not be empty");
     expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
     expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
+  });
+
+  it("shallow clones properties but deep clones 'meta' property", () => {
+    const flayyer = new FlayyerIO({ tenant: "tenant", deck: "deck", template: "template", meta: { width: 1080 } });
+    const clone = flayyer.clone();
+    clone.deck = "flayyer";
+    clone.meta.width = 400;
+    expect(clone.deck).not.toEqual(flayyer.deck);
+    expect(clone.meta.width).not.toEqual(flayyer.meta.width);
   });
 
   const DEFAULTS = {
