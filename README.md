@@ -4,7 +4,7 @@
 
 Format URLs to generate social media images using Flyyer.io.
 
-**To create templates with React.js or Vue.js use [create-flyyer-app](https://github.com/flyyer/create-flyyer-app) 👈**
+**To create templates with React.js or Vue.js use [create-flyyer-app](https://github.com/useflyyer/create-flyyer-app) 👈**
 
 ![Flyyer live image](https://github.com/flyyer/create-flyyer-app/blob/master/.github/assets/website-to-preview.png?raw=true&v=1)
 
