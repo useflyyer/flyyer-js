@@ -7,7 +7,7 @@ import typescript from "rollup-plugin-typescript2";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("./package.json");
 
-const libraryName = "flayyer";
+const libraryName = "flyyer";
 
 export default {
   input: `src/${libraryName}.ts`,
