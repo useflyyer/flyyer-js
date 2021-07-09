@@ -83,7 +83,7 @@ You'll get the best results doing this:
 
 ### 4. Manage rules
 
-[Login at Flyyer.io](https://flyyer.com/dashboard/_/projects/_/manage?ref=flyyer-js), select your project and go to Manage rules. Then create a rule like the following:
+[Login at Flyyer.io](https://flyyer.io/dashboard/_/projects/_/manage?ref=flyyer-js), select your project and go to Manage rules. Then create a rule like the following:
 
 [![Flyyer basic rule example](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/rule-example.png?raw=true&v=1)](https://flyyer.io/dashboard/)
 
@@ -213,7 +213,7 @@ const flyyer = new FlyyerRender({
 <img src={flyyer.href()}>
 ```
 
-[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://flyyer.io/v2/flyyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
+[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
 
 **To create templates with React.js or Vue.js use [create-flyyer-app](https://github.com/useflyyer/create-flyyer-app) 👈**
 
