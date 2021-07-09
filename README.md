@@ -6,7 +6,7 @@ Format URLs to generate social media images using Flyyer.io.
 
 **To create templates with React.js or Vue.js use [create-flyyer-app](https://github.com/useflyyer/create-flyyer-app) 👈**
 
-![Flyyer live image](https://github.com/flyyer/create-flyyer-app/blob/master/.github/assets/website-to-preview.png?raw=true&v=1)
+![Flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/website-to-preview.png?raw=true&v=1)
 
 **This module is agnostic to any JS framework and has only one dependency: [qs](https://github.com/ljharb/qs).**
 
@@ -140,7 +140,7 @@ const flyyer = new FlyyerRender({
   variables: { title: "try changing this" },
 });
 const url = flyyer.href()
-// https://flyyer.io/v2/flyyer/default/main.jpeg?title=try+changing+this
+// https://cdn.flyyer.io/v2/flyyer/default/main.jpeg?title=try+changing+this
 ```
 
 [![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-1.png?raw=true&v=1)](https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=try+changing+this)
@@ -231,7 +231,7 @@ To decode an URL for debugging purposes:
 
 ```js
 console.log(decodeURI(url));
-// > https://flyyer.io/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
+// > https://cdn.flyyer.io/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
 ```
 
 Helpers to compare instances (ignores `__v` param and performs a shallow compare of `variables`).
