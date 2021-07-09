@@ -168,7 +168,7 @@ export interface FlyyerCommonParams<T extends FlyyerVariables> {
  *  console.log(flyyer.href())
  * // https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  */
-export interface FlyyerIOParams<T extends FlyyerVariables> extends FlyyerCommonParams<T> {
+export interface FlyyerRenderParams<T extends FlyyerVariables> extends FlyyerCommonParams<T> {
   /**
    * Your tenant's `slug`. Lowercase and no spaces.
    * Visit https://flyyer.io/dashboard to get this value for your project
@@ -206,7 +206,7 @@ export interface FlyyerIOParams<T extends FlyyerVariables> extends FlyyerCommonP
  *  console.log(flyyer.href())
  * // https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  */
-export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implements FlyyerIOParams<T> {
+export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implements FlyyerRenderParams<T> {
   public tenant: string;
   public deck: string;
   public template: string;
@@ -215,7 +215,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public variables: T;
   public meta: FlyyerMetaVariables;
 
-  constructor(args: FlyyerIOParams<T>) {
+  constructor(args: FlyyerRenderParams<T>) {
     if (!args) throw new TypeError("FlyyerRender constructor must not be empty");
 
     this.tenant = args.tenant;
@@ -231,7 +231,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
    * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
    * **Be aware `variables` are shallow cloned.**
    */
-  clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerIOParams<K>>): FlyyerRender<K> {
+  clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerRenderParams<K>>): FlyyerRender<K> {
     const next = new FlyyerRender<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
     return next;
   }
