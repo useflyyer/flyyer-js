@@ -1,6 +1,4 @@
 import { Flyyer, isEqualFlyyer } from "../src/flyyer";
-import { toQuery } from "../src/query";
-import { FlyyerRender, isEqualFlyyerRender } from "../src/render";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
@@ -85,6 +83,35 @@ describe("Flyyer", () => {
     expect(flyyer3.href()).toEqual("https://cdn.flyyer.io/v2/project/_/__v=false/");
   });
 
+  it("encodes url with hmac signature", () => {
+    const flyyer1 = new Flyyer({
+      project: "project",
+      path: "/products/1",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "HMAC",
+      meta: { width: 1080 },
+    });
+    const flyyer2 = flyyer1.clone({ meta: { ...flyyer1.meta, v: 123 } });
+
+    // if __v changes the signature remains the same
+    const regex = /^https:\/\/cdn.flyyer.io\/v2\/project\/c5bd759442845a20\/__v=(\d+)&_w=1080\/products\/1$/;
+    expect(flyyer1.href()).toMatch(regex);
+    expect(flyyer2.href()).toMatch(regex);
+  });
+
+  it("encodes url with JWT signature", () => {
+    const flyyer1 = new Flyyer({
+      project: "project",
+      path: "/products/1",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "JWT",
+      meta: { v: null },
+    });
+    expect(flyyer1.href()).toEqual(
+      "https://cdn.flyyer.io/v2/project/jwt-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjoicHJvZHVjdHMvMSIsInBhcmFtcyI6IiJ9.KMAG3_NQkfou6rkBc3gYunVilfqNnFdVzKd2IrRmUz4",
+    );
+  });
+
   it("compares two instances", async () => {
     const flyyer0 = new Flyyer({
       project: "project",
@@ -98,153 +125,5 @@ describe("Flyyer", () => {
     expect(isEqualFlyyer(flyyer0, flyyer0)).toEqual(true);
     expect(isEqualFlyyer(flyyer0, flyyer1)).toEqual(true);
     expect(isEqualFlyyer(flyyer0, flyyer2)).toEqual(false);
-  });
-});
-
-describe("FlyyerRender", () => {
-  it("FlyyerRender is instantiable", () => {
-    const flyyer = new FlyyerRender({ tenant: "", deck: "", template: "" });
-    expect(flyyer).toBeInstanceOf(FlyyerRender);
-  });
-
-  it("raises error if missing arguments", () => {
-    const executer = (args?: any) => new FlyyerRender(args).href();
-
-    expect(() => executer()).toThrow("FlyyerRender constructor must not be empty");
-    expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
-    expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
-  });
-
-  it("shallow clones properties but deep clones 'meta' property", () => {
-    const flyyer = new FlyyerRender({ tenant: "tenant", deck: "deck", template: "template", meta: { width: 1080 } });
-    const clone = flyyer.clone();
-    clone.deck = "flyyer";
-    clone.meta.width = 400;
-    expect(clone.deck).not.toEqual(flyyer.deck);
-    expect(clone.meta.width).not.toEqual(flyyer.meta.width);
-  });
-
-  const DEFAULTS = {
-    tenant: "tenant",
-    deck: "deck",
-    template: "template",
-  };
-
-  it("no queryparams no '?'", () => {
-    const flyyer = new FlyyerRender({
-      ...DEFAULTS,
-      meta: { v: null },
-    });
-    expect(flyyer.href()).toEqual("https://cdn.flyyer.io/render/v2/tenant/deck/template.jpeg");
-  });
-
-  it("encodes url", () => {
-    const flyyer = new FlyyerRender({
-      ...DEFAULTS,
-      variables: {
-        title: "Hello world!",
-        description: "",
-      },
-    });
-    const href = flyyer.href();
-    expect(href).toMatch(
-      /^https:\/\/cdn.flyyer.io\/render\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=Hello\+world%21&description=$/,
-    );
-  });
-
-  it("encodes url and skips undefined values", () => {
-    const flyyer = new FlyyerRender({
-      ...DEFAULTS,
-      variables: {
-        title: "title",
-        description: undefined,
-      },
-    });
-    const href = flyyer.href();
-    expect(href).toMatch(/^https:\/\/cdn.flyyer.io\/render\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=title$/);
-  });
-
-  it("encodes url and convert null values to empty string", () => {
-    const flyyer = new FlyyerRender({
-      ...DEFAULTS,
-      variables: {
-        title: "title",
-        description: null,
-      },
-    });
-    const href = flyyer.href();
-    expect(href).toMatch(
-      /^https:\/\/cdn.flyyer.io\/render\/v2\/tenant\/deck\/template\.jpeg\?__v=(\d+)&title=title&description=$/,
-    );
-  });
-
-  it("encodes url with meta values", () => {
-    const flyyer = new FlyyerRender({
-      ...DEFAULTS,
-      variables: {
-        title: "title",
-      },
-      meta: {
-        agent: "whatsapp",
-        locale: "es-CL",
-        height: 100,
-        width: "200",
-        id: "dev forgot to encode",
-        v: null,
-      },
-      extension: "png",
-    });
-    const href = flyyer.href();
-    expect(href).toMatch(
-      /^https:\/\/cdn.flyyer.io\/render\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&_loc=es-CL&title=title$/,
-    );
-  });
-
-  it("compares two instances", async () => {
-    const flyyer0 = new FlyyerRender({
-      ...DEFAULTS,
-      variables: { title: "Hello" },
-      meta: { v: "anything" },
-    });
-    const flyyer1 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Hello" } });
-    const flyyer2 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Bye" } });
-    expect(flyyer0.href()).not.toEqual(flyyer1.href()); // different __v
-    expect(isEqualFlyyerRender(flyyer0, flyyer0)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer1)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer2)).toEqual(false);
-  });
-});
-
-describe("toQuery", () => {
-  it("stringifies object of primitives", () => {
-    // @ts-expect-error will complain about duplicate identifier `b`
-    const object = { a: "hello", b: 100, c: false, d: null, e: undefined, b: 999 }; // eslint-disable-line no-dupe-keys
-    const str = toQuery(object);
-    expect(str).toEqual(`a=hello&b=999&c=false&d=`);
-  });
-
-  it("stringifies a complex object", () => {
-    const object = {
-      a: { aa: "bar", ab: "foo" },
-      b: [{ c: "foo" }, { c: "bar" }],
-    };
-    const str = toQuery(object);
-    expect(str).not.toEqual(decodeURI(str));
-    expect(decodeURI(str)).toEqual(`a[aa]=bar&a[ab]=foo&b[0][c]=foo&b[1][c]=bar`);
-  });
-
-  it("encodes special characters", () => {
-    const object = { title: "Ñandú" };
-    const str = toQuery(object);
-    expect(str).toEqual(`title=%C3%91and%C3%BA`);
-    expect(decodeURIComponent("%C3%91")).toEqual("Ñ");
-    expect(decodeURI(str)).toEqual(`title=Ñandú`);
-  });
-
-  it("encodes Date", () => {
-    const now = new Date();
-    const object = { timestamp: now };
-    const str = toQuery(object);
-    expect(str).toEqual(`timestamp=${encodeURIComponent(now.toISOString())}`);
   });
 });
