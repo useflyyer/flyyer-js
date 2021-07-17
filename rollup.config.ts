@@ -16,7 +16,7 @@ export default {
     { file: pkg.module, format: "es", sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: ["qs"],
+  external: ["qs", "crypto-js", "crypto"],
   watch: {
     include: "src/**",
   },
