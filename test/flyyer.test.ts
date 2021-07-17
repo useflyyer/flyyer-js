@@ -1,4 +1,6 @@
-import { FlyyerRender, Flyyer, toQuery, isEqualFlyyer, isEqualFlyyerRender } from "../src/flyyer";
+import { Flyyer, isEqualFlyyer } from "../src/flyyer";
+import { toQuery } from "../src/query";
+import { FlyyerRender, isEqualFlyyerRender } from "../src/render";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
@@ -216,7 +218,7 @@ describe("FlyyerRender", () => {
 describe("toQuery", () => {
   it("stringifies object of primitives", () => {
     // @ts-expect-error will complain about duplicate identifier `b`
-    const object = { a: "hello", b: 100, c: false, d: null, e: undefined, b: 999 };
+    const object = { a: "hello", b: 100, c: false, d: null, e: undefined, b: 999 }; // eslint-disable-line no-dupe-keys
     const str = toQuery(object);
     expect(str).toEqual(`a=hello&b=999&c=false&d=`);
   });

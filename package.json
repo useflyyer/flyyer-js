@@ -5,81 +5,58 @@
   "keywords": [
     "flyyer"
   ],
-  "main": "dist/flyyer.es5.js",
-  "module": "dist/flyyer.esm.js",
-  "typings": "dist/flyyer.d.ts",
-  "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "author": "Patricio López Juri <patricio@flyyer.io>",
+  "module": "dist/flyyer-js.esm.js",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/useflyyer/flyyer-js.git"
   },
-  "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "rollup -c rollup.config.ts",
-    "prepublishOnly": "yarn run build",
-    "start": "rollup -c rollup.config.ts -w",
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
-    "test": "jest"
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "eslint --fix"
-    ]
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
+  "size-limit": [
+    {
+      "path": "dist/flyyer-js.cjs.production.min.js",
+      "limit": "10 KB"
     },
-    "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ]
-  },
+    {
+      "path": "dist/flyyer-js.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "peerDependencies": {},
   "dependencies": {
     "@types/qs": "^6.9.7",
     "crypto-js": "^4.0.0",
     "qs": "^6.10.1"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "@flyyer/eslint-config": "^2.0.1",
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@size-limit/preset-small-lib": "^5.0.1",
     "@types/crypto-js": "^4.0.2",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^15.12.4",
     "eslint": "^7.30.0",
-    "husky": "^4.3.7",
-    "jest": "^27.0.6",
-    "lint-staged": "^11.0.0",
+    "eslint-plugin-jest": "^24.3.6",
     "prettier": "^2.3.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.53.1",
-    "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "ts-jest": "^27.0.3",
-    "ts-node": "^10.1.0",
+    "size-limit": "^5.0.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.0",
     "typescript": "^4.3.5"
   }
 }
