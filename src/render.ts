@@ -148,7 +148,7 @@ export function isEqualFlyyerRender(
   variablesCompareFn = isEqualFlyyerVariables,
 ): boolean {
   if (a === b) return true;
-  const attrs = ["tenant", "deck", "template", "version", "extension"] as const;
+  const attrs = ["tenant", "deck", "template", "version", "extension", "strategy", "secret"] as const;
   for (const attr of attrs) {
     if (a[attr] !== b[attr]) {
       return false;

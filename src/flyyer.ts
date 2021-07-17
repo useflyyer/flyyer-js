@@ -142,7 +142,12 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     const base = "https://cdn.flyyer.io/v2";
     const params = this.params() || "_";
     if (strategy && strategy.toUpperCase() === "JWT") {
-      return `${base}/${project}/jwt-${signature}`;
+      const v = __V(this.meta.v);
+      if (v) {
+        return `${base}/${project}/jwt-${signature}?__v=${v}`;
+      } else {
+        return `${base}/${project}/jwt-${signature}`;
+      }
     } else {
       return `${base}/${project}/${signature}/${params}/${path}`;
     }
@@ -161,7 +166,13 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
  */
 export function isEqualFlyyer(a: Flyyer, b: Flyyer, variablesCompareFn = isEqualFlyyerVariables): boolean {
   if (a === b) return true;
-  if (a.project !== b.project || a.extension !== b.extension || normalizePath(a.path) !== normalizePath(b.path)) {
+  if (
+    a.project !== b.project ||
+    a.extension !== b.extension ||
+    a.strategy !== b.strategy ||
+    a.secret !== b.secret ||
+    normalizePath(a.path) !== normalizePath(b.path)
+  ) {
     return false;
   }
   return isEqualFlyyerMeta(a.meta, b.meta) && variablesCompareFn(a.variables, b.variables);
