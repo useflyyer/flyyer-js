@@ -20,7 +20,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -51,8 +51,8 @@
     "@flyyer/eslint-config": "^2.0.1",
     "@size-limit/preset-small-lib": "^5.0.1",
     "@types/crypto-js": "^4.0.2",
-    "eslint": "^7.30.0",
-    "eslint-plugin-jest": "^24.3.6",
+    "eslint": "^7.31.0",
+    "eslint-plugin-jest": "^24.3.7",
     "prettier": "^2.3.2",
     "size-limit": "^5.0.1",
     "tsdx": "^0.14.1",
