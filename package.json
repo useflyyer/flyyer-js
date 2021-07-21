@@ -3,7 +3,12 @@
   "version": "3.1.0-beta.2",
   "description": "Flyyer.io helper classes and methods to generate smart URL to render images.",
   "keywords": [
-    "flyyer"
+    "flyyer",
+    "typescript",
+    "seo",
+    "og:image",
+    "og-image",
+    "react"
   ],
   "author": "Patricio López Juri <patricio@flyyer.io>",
   "module": "dist/flyyer-js.esm.js",
