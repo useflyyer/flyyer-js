@@ -3,7 +3,6 @@ export { toQuery } from "./query";
 export { FlyyerCommonParams } from "./common";
 export { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
 export { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
-export { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, BASE64_URL } from "./jwt";
 export { FlyyerExtension } from "./ext";
 export { normalizePath, FlyyerPath } from "./paths";
 export { Flyyer, FlyyerParams, isEqualFlyyer } from "./flyyer";

@@ -74,7 +74,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public secret: string | null;
   public strategy: "JWT" | "HMAC" | null;
 
-  constructor(args: FlyyerRenderParams<T>) {
+  public constructor(args: FlyyerRenderParams<T>) {
     if (!args) throw new TypeError("FlyyerRender constructor must not be empty");
 
     this.tenant = args.tenant;
@@ -92,12 +92,13 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
    * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
    * **Be aware `variables` are shallow cloned.**
    */
-  clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerRenderParams<K>>): FlyyerRender<K> {
-    const next = new FlyyerRender<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
+  public clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerRenderParams<K>>): FlyyerRender<K> {
+    // @ts-expect-error Constructor
+    const next = new this.constructor<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
     return next;
   }
 
-  querystring(extra?: any, options?: IStringifyOptions): string {
+  public querystring(extra?: any, options?: IStringifyOptions): string {
     const defaults = {
       __v: __V(this.meta.v),
       __id: this.meta.id,
@@ -118,7 +119,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
    * const flyyer = new FlyyerRender({ meta: { v: null } });
    * <img src={flyyer.href()} />
    */
-  href(): string {
+  public href(): string {
     if (isUndefined(this.tenant)) throw new Error("Missing 'tenant' property");
     if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
@@ -134,7 +135,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   /**
    * Alias of `.href()`
    */
-  toString() {
+  public toString() {
     return this.href();
   }
 }

@@ -1,9 +1,7 @@
-import HmacSHA256 from "crypto-js/hmac-sha256";
 import type { IStringifyOptions } from "qs";
 
 import { FlyyerCommonParams } from "./common";
 import { FlyyerExtension } from "./ext";
-import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN } from "./jwt";
 import { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
 import { FlyyerPath, normalizePath } from "./paths";
 import { toQuery } from "./query";
@@ -58,7 +56,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   public secret: string | null;
   public strategy: "JWT" | "HMAC" | null;
 
-  constructor(args: FlyyerParams<T>) {
+  public constructor(args: FlyyerParams<T>) {
     if (!args) throw new TypeError("Flyyer constructor must not be empty");
 
     this.project = args.project;
@@ -71,15 +69,23 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   }
 
   /**
+   * Override this method to implement signatures. Must be synchronous (no `Promise` allowed).
+   */
+  public sign(project: string, path: string, arg2: string, strategy: string | null, secret: string | null): string {
+    return "_";
+  }
+
+  /**
    * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
    * **Be aware `variables` are shallow cloned.**
    */
-  clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerParams<K>>): Flyyer<K> {
-    const next = new Flyyer<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
+  public clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerParams<K>>): Flyyer<K> {
+    // @ts-expect-error Constructor
+    const next = new this.constructor<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
     return next;
   }
 
-  params(extra?: any, options?: IStringifyOptions): string {
+  public params(extra?: any, options?: IStringifyOptions): string {
     const defaults = {
       __v: __V(this.meta.v),
       __id: this.meta.id,
@@ -91,36 +97,6 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     return toQuery(Object.assign(defaults, this.variables, extra), options);
   }
 
-  static signHMAC(data: string, secret: string): string {
-    return HmacSHA256(data, secret).toString().slice(0, 16);
-  }
-  static signJWT(data: any, secret: string): string {
-    const token = CREATE_JWT_TOKEN(data);
-    return SIGN_JWT_TOKEN(token, secret!);
-  }
-  static sign(project: string, path: string, params: string, strategy?: string | null, secret?: string | null): string {
-    if (!strategy && !secret) {
-      return "_";
-    }
-    if (strategy && !secret) {
-      throw new Error(
-        "Got `strategy` but missing `secret`. You can find it in your project in Advanced settings: https://flyyer.io/dashboard/_/projects/_/advanced",
-      );
-    }
-    if (!strategy && secret) {
-      throw new Error("Got `secret` but missing `strategy`. Valid options are `HMAC` or `JWT`.");
-    }
-
-    if (strategy!.toUpperCase() === "HMAC") {
-      const data = `${project}/${path}${params}`;
-      return Flyyer.signHMAC(data, secret!);
-    }
-    if (strategy!.toUpperCase() === "JWT") {
-      return Flyyer.signJWT({ path, params }, secret!);
-    }
-    throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
-  }
-
   /**
    * Generate final URL you can use in your og:images.
    * @example
@@ -129,7 +105,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
    * const flyyer = new Flyyer({ meta: { v: null } });
    * <img src={flyyer.href()} />
    */
-  href(): string {
+  public href(): string {
     const project = this.project;
     if (isUndefined(project)) throw new Error("Missing 'project' property");
 
@@ -137,7 +113,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
 
     const strategy = this.strategy;
     const secret = this.secret;
-    const signature = Flyyer.sign(project, path, this.params({ __v: undefined }), strategy, secret);
+    const signature = this.sign(project, path, this.params({ __v: undefined }), strategy, secret);
 
     const base = "https://cdn.flyyer.io/v2";
     const params = this.params() || "_";
@@ -156,7 +132,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   /**
    * Alias of `.href()`
    */
-  toString() {
+  public toString() {
     return this.href();
   }
 }

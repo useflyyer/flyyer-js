@@ -1,67 +1,40 @@
 {
-  "name": "@flyyer/flyyer",
-  "version": "3.1.0",
-  "description": "Flyyer.io helper classes and methods to generate smart URL to render images.",
-  "keywords": [
-    "flyyer",
-    "typescript",
-    "seo",
-    "og:image",
-    "og-image",
-    "react"
-  ],
-  "author": "Patricio López Juri <patricio@flyyer.io>",
-  "module": "dist/flyyer-js.esm.js",
+  "name": "root",
+  "private": true,
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "sideEffects": false,
+  "author": {
+    "name": "Patricio Lopez Juri",
+    "email": "patricio@flyyer.io"
+  },
+  "homepage": "https://github.com/useflyyer/flyyer-js",
   "repository": {
     "type": "git",
     "url": "https://github.com/useflyyer/flyyer-js.git"
   },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "engines": {
-    "node": ">=12"
-  },
+  "workspaces": ["packages/*"],
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "eslint '*/**/*.{js,ts,tsx}'",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why"
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "eslint '*/**/*.{js,ts,tsx}'"
   },
-  "size-limit": [
-    {
-      "path": "dist/flyyer-js.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/flyyer-js.esm.js",
-      "limit": "10 KB"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
-  ],
-  "peerDependencies": {},
-  "dependencies": {
-    "@types/qs": "^6.9.7",
-    "crypto-js": "^4.0.0",
-    "qs": "^6.10.1"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "devDependencies": {
-    "@flyyer/eslint-config": "^2.0.1",
-    "@size-limit/preset-small-lib": "^5.0.1",
-    "@types/crypto-js": "^4.0.2",
+    "@flyyer/eslint-config": "^2.0.0",
     "eslint": "^7.31.0",
-    "eslint-plugin-jest": "^24.3.7",
+    "husky": "^4.3.8",
+    "lerna": "^4.0.0",
+    "lint-staged": "^11.0.1",
     "prettier": "^2.3.2",
-    "size-limit": "^5.0.1",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.3.0",
     "typescript": "^4.3.5"
   }
 }

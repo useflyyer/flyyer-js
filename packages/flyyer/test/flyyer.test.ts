@@ -1,4 +1,6 @@
-import { Flyyer, isEqualFlyyer } from "../src/flyyer";
+import { isEqualFlyyer } from "@flyyer/flyyer-lite";
+
+import { Flyyer } from "../src/flyyer-signed";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
