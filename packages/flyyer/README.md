@@ -61,7 +61,7 @@ import { useRouter } from 'next/router'
 
 function SEO() {
   const router = useRouter();
-  const flyyer = new FlyyerAI({
+  const flyyer = new Flyyer({
     project: "my-project",
     path: router.asPath,
   });
@@ -100,9 +100,9 @@ Advanced features include:
 Here you have a detailed full example for project `website-com` and path `/path/to/product`.
 
 ```tsx
-import { FlyyerAI } from "@flyyer/flyyer";
+import { Flyyer } from "@flyyer/flyyer";
 
-const flyyer = new FlyyerAI({
+const flyyer = new Flyyer({
   // Project slug, find it in your dashboard https://flyyer.io/dashboard/.
   project: "website-com",
   // The current path of your website (by default it's `/`).
@@ -142,7 +142,7 @@ import { Flyyer } from "@flyyer/flyyer-lite";
 
 ## FlyyerRender
 
-* Flyyer uses the [rules defined on your dashboard](https://flyyer.io/dashboard/_/projects) to decide how to handle every image. It analyse your website to render a content-rich image. Let's say _"FlyyerAI renders images based on the content of this route"_.
+* Flyyer uses the [rules defined on your dashboard](https://flyyer.io/dashboard/_/projects) to decide how to handle every image. It analyse your website to render a content-rich image. Let's say _"Flyyer renders images based on the content of this route"_.
 
 * FlyyerRender instead requires you to explicitly declare template and variables for the images to render, **giving you more control for customization**. Let's say _"FlyyerRender renders an image using this template and these explicit variables"_.
 
@@ -273,7 +273,7 @@ yarn test
 
 ### What is the difference between Flyyer and FlyyerRender?
 
-* Flyyer uses the [rules defined on your dashboard](https://flyyer.io/dashboard/_/projects) to decide how to handle every image. It analyse your website to render a content-rich image. Let's say _"FlyyerAI renders images based on the content of this route"_.
+* Flyyer uses the [rules defined on your dashboard](https://flyyer.io/dashboard/_/projects) to decide how to handle every image. It analyse your website to render a content-rich image. Let's say _"Flyyer renders images based on the content of this route"_.
 
 * FlyyerRender instead requires you to explicitly declare template and variables for the images to render, **giving you more control for customization**. Let's say _"FlyyerRender renders an image using this template and these explicit variables"_.
 
