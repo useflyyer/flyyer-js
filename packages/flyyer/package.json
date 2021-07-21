@@ -1,6 +1,6 @@
 {
   "name": "@flyyer/flyyer",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Flyyer.io helper classes and methods to generate smart URL to render images.",
   "keywords": [
     "flyyer",
@@ -46,9 +46,8 @@
       "limit": "10 KB"
     }
   ],
-  "peerDependencies": {},
   "dependencies": {
-    "@flyyer/flyyer-lite": "^3.1.0"
+    "@flyyer/flyyer-lite": "^3.2.0"
   },
   "devDependencies": {
     "@flyyer/eslint-config": "^2.0.1",
