@@ -48,8 +48,7 @@
   ],
   "peerDependencies": {},
   "dependencies": {
-    "@flyyer/flyyer-lite": "^3.1.0",
-    "crypto-es": "^1.2.7"
+    "@flyyer/flyyer-lite": "^3.1.0"
   },
   "devDependencies": {
     "@flyyer/eslint-config": "^2.0.1",

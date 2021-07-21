@@ -1,11 +1,14 @@
-// @ts-expect-error Path
-import Base64 from "crypto-es/lib/enc-base64";
-// @ts-expect-error Path
-import Utf8 from "crypto-es/lib/enc-utf8";
-// @ts-expect-error Path
-import HmacSHA256 from "crypto-es/lib/hmac-sha256";
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
-export function BASE64_URL(source: Parameters<typeof Base64.stringify>[0]): string {
+// @ts-ignore
+import { Utf8 } from "./crypto/core";
+// @ts-ignore
+import { Base64 } from "./crypto/enc-base64";
+// @ts-ignore
+import { HmacSHA256 } from "./crypto/sha256";
+
+export function BASE64_URL(source: any): string {
   // Encode in classical base64
   let encodedSource = Base64.stringify(source);
   // Remove padding equal characters
