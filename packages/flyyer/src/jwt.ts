@@ -1,6 +1,9 @@
-import Base64 from "crypto-js/enc-base64";
-import Utf8 from "crypto-js/enc-utf8";
-import HmacSHA256 from "crypto-js/hmac-sha256";
+// @ts-expect-error Path
+import Base64 from "crypto-es/lib/enc-base64";
+// @ts-expect-error Path
+import Utf8 from "crypto-es/lib/enc-utf8";
+// @ts-expect-error Path
+import HmacSHA256 from "crypto-es/lib/hmac-sha256";
 
 export function BASE64_URL(source: Parameters<typeof Base64.stringify>[0]): string {
   // Encode in classical base64
@@ -34,4 +37,8 @@ export function SIGN_JWT_TOKEN(token: string, secret: string): string {
   const signature = BASE64_URL(sha);
   const signed = token + "." + signature;
   return signed;
+}
+
+export function SIGN_HMAC_DATA(data: string, secret: string): string {
+  return HmacSHA256(data, secret).toString();
 }

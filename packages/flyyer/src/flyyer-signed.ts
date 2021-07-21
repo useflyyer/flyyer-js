@@ -1,11 +1,11 @@
 import { Flyyer as FlyyerBase } from "@flyyer/flyyer-lite";
-import HmacSHA256 from "crypto-js/hmac-sha256";
 
-import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN } from "./jwt";
+import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 
 export class Flyyer extends FlyyerBase {
   public static signHMAC(data: string, secret: string): string {
-    return HmacSHA256(data, secret).toString().slice(0, 16);
+    const LENGTH = 16; // We only compare the first 16 chars.
+    return SIGN_HMAC_DATA(data, secret).slice(0, LENGTH);
   }
   public static signJWT(data: Record<any, any>, secret: string): string {
     const token = CREATE_JWT_TOKEN(data);

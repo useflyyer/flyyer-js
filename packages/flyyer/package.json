@@ -49,12 +49,11 @@
   "peerDependencies": {},
   "dependencies": {
     "@flyyer/flyyer-lite": "^3.1.0",
-    "crypto-js": "^4.0.0"
+    "crypto-es": "^1.2.7"
   },
   "devDependencies": {
     "@flyyer/eslint-config": "^2.0.1",
     "@size-limit/preset-small-lib": "^5.0.1",
-    "@types/crypto-js": "^4.0.2",
     "eslint": "^7.31.0",
     "eslint-plugin-jest": "^24.3.7",
     "prettier": "^2.3.2",
