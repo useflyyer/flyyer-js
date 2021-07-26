@@ -11,7 +11,9 @@
     "type": "git",
     "url": "https://github.com/useflyyer/flyyer-js.git"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
@@ -33,7 +35,7 @@
     "eslint": "^7.31.0",
     "husky": "^4.3.8",
     "lerna": "^4.0.0",
-    "lint-staged": "^11.0.1",
+    "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   }
