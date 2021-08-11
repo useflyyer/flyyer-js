@@ -155,7 +155,7 @@ const flyyer = new FlyyerRender({
   variables: { title: "try changing this" },
 });
 const url = flyyer.href()
-// https://cdn.flyyer.io/v2/flyyer/default/main.jpeg?title=try+changing+this
+// https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=try+changing+this
 ```
 
 [![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-1.png?raw=true&v=1)](https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=try+changing+this)
@@ -246,7 +246,7 @@ To decode an URL for debugging purposes:
 
 ```js
 console.log(decodeURI(url));
-// > https://cdn.flyyer.io/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
+// > https://cdn.flyyer.io/r/v2/tenant/deck/template.jpeg?title=Hello+world!&__v=123
 ```
 
 Helpers to compare instances (ignores `__v` param and performs a shallow compare of `variables`).
