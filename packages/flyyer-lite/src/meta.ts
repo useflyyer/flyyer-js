@@ -12,8 +12,8 @@
  * const flyyerRender = new FlyyerRender({ meta });
  * const flyyer = new Flyyer({ meta });
  * @example
- * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?__v=disabled`
- * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
+ * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?__v=disabled`
+ * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
  * `https://cdn.flyyer.io/v2/flyyer-com/_/_/?__v=disabled`
  * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/marketplace`
  */
@@ -43,7 +43,7 @@ export interface FlyyerMetaVariables {
    * 1200 // _w=1200 // default value most of the time
    * 1080 // _w=1080
    * @example
-   * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
+   * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/jobs`
    */
   width?: string | number | null;
@@ -55,7 +55,7 @@ export interface FlyyerMetaVariables {
    * 1080 // _h=1080
    * 1080 // _h=1920
    * @example
-   * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
+   * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/jobs`
    */
   height?: string | number | null;
@@ -81,8 +81,8 @@ export interface FlyyerMetaVariables {
    * __v="1" // constant
    * __v=undefined // `__v=123123` a timestamp will be used.
    * @example
-   * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Hello&__v=123123` // by default is a timestamp
-   * `https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Hello&__v=` // disabled to use browser's cache
+   * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Hello&__v=123123` // by default is a timestamp
+   * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Hello&__v=` // disabled to use browser's cache
    */
   v?: string | number | null;
 }

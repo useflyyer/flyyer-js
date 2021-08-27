@@ -1,4 +1,4 @@
-import { FlyyerRender, isEqualFlyyerRender } from "../src/render";
+import { FlyyerRender, isEqualFlyyerRender } from "..";
 
 describe("FlyyerRender", () => {
   it("FlyyerRender is instantiable", () => {
@@ -10,8 +10,7 @@ describe("FlyyerRender", () => {
     const executer = (args?: any) => new FlyyerRender(args).href();
 
     expect(() => executer()).toThrow("FlyyerRender constructor must not be empty");
-    expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
-    expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
+    expect(() => executer({ tenant: "" })).toThrow("Missing 'tenant' property");
   });
 
   it("shallow clones properties but deep clones 'meta' property", () => {

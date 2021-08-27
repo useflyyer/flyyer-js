@@ -15,7 +15,7 @@ import { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
  *
  * Set and override the variables of the template by using the `variables` object.
  *
- * Example: https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
+ * Example: https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  * @example
  * const flyyer = new FlyyerRender({
  *   tenant: "flyyer",
@@ -24,7 +24,7 @@ import { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
  *   variables: { title: "Thanks for reading this" },
  *  });
  *  console.log(flyyer.href())
- * // https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
+ * // https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  */
 export interface FlyyerRenderParams<T extends FlyyerVariables> extends FlyyerCommonParams<T> {
   /**
@@ -52,7 +52,7 @@ export interface FlyyerRenderParams<T extends FlyyerVariables> extends FlyyerCom
  *
  * Set and override the variables of the template by using the `variables` object.
  *
- * Example: https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
+ * Example: https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  * @example
  * const flyyer = new FlyyerRender({
  *   tenant: "flyyer",
@@ -61,7 +61,7 @@ export interface FlyyerRenderParams<T extends FlyyerVariables> extends FlyyerCom
  *   variables: { title: "Thanks for reading this" },
  *  });
  *  console.log(flyyer.href())
- * // https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
+ * // https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Thanks+for+reading+this
  */
 export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implements FlyyerRenderParams<T> {
   public tenant: string;
@@ -124,7 +124,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
 
-    const base = "https://cdn.flyyer.io/render/v2";
+    const base = "https://cdn.flyyer.io/r/v2";
     const query = this.querystring(undefined, { addQueryPrefix: true });
     if (this.version) {
       return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}${query}`;
