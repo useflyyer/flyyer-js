@@ -6,7 +6,8 @@ export { FlyyerVariables, isEqualFlyyerVariables } from "@flyyer/flyyer-lite";
 export { FlyyerExtension } from "@flyyer/flyyer-lite";
 export { normalizePath, FlyyerPath } from "@flyyer/flyyer-lite";
 export { FlyyerParams, isEqualFlyyer } from "@flyyer/flyyer-lite";
-export { FlyyerRender, FlyyerRenderParams, isEqualFlyyerRender } from "@flyyer/flyyer-lite";
+export { FlyyerRenderParams, isEqualFlyyerRender } from "@flyyer/flyyer-lite";
 
 export { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA, BASE64_URL } from "./jwt";
 export { Flyyer } from "./flyyer-signed";
+export { FlyyerRender } from "./flyyer-render-signed";
