@@ -34,7 +34,7 @@ export class FlyyerRender extends FlyyerBase {
           toQuery(Object.assign(defaultsWithoutV, this.variables, extra), options),
         ].join("#");
         const __hmac = FlyyerRender.signHMAC(data, this.secret);
-        return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra, { __hmac }));
+        return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra, { __hmac }), options);
       } else if (this.strategy.toLowerCase() === "jwt") {
         const jwtDefaults = {
           i: this.meta.id,
@@ -53,7 +53,7 @@ export class FlyyerRender extends FlyyerBase {
           ...jwtDefaults,
         };
         const __jwt = FlyyerRender.signJWT(data, this.secret);
-        return toQuery(Object.assign({ __jwt, ...defaultV }));
+        return toQuery(Object.assign({ __jwt, ...defaultV }), options);
       }
     }
     return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra), options);
@@ -77,13 +77,10 @@ export class FlyyerRender extends FlyyerBase {
       throw new Error("Missing `secret`. You can find it in your project in Advanced settings.");
     if (this.secret && !this.strategy)
       throw new Error("Got `secret` but missing `strategy`. Valid options are `HMAC` or `JWT`.");
-
     const base = "https://cdn.flyyer.io/r/v2";
     const query = this.querystring(undefined, { addQueryPrefix: true });
 
-    if (this.strategy && this.strategy.toLowerCase() === "jwt") {
-      return `${base}/${this.tenant}${query}`;
-    }
+    if (this.strategy && this.strategy.toLowerCase() === "jwt") return `${base}/${this.tenant}${query}`;
     let finalHref = `${base}/${this.tenant}/${this.deck}/${this.template}`;
     if (this.version) finalHref += `.${this.version}`;
     if (this.extension) finalHref += `.${this.extension}`;
