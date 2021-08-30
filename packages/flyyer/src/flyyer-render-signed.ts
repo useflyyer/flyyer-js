@@ -1,8 +1,6 @@
-import { FlyyerRender as FlyyerBase, FlyyerVariables, toQuery } from "@flyyer/flyyer-lite";
-import type { IStringifyOptions } from "qs";
+import { FlyyerRender as FlyyerBase, FlyyerRenderParams, FlyyerVariables, toQuery } from "@flyyer/flyyer-lite";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
-import { __V } from "./v";
 
 export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends FlyyerBase<T> {
   public static signHMAC(data: string, secret: string): string {
@@ -14,77 +12,67 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
     return SIGN_JWT_TOKEN(token, secret);
   }
 
-  public querystring(extra?: any, options?: IStringifyOptions): string {
-    const defaultV = { __v: __V(this.meta.v) };
-    const defaultsWithoutV = {
-      __id: this.meta.id,
-      _w: this.meta.width,
-      _h: this.meta.height,
-      _res: this.meta.resolution,
-      _ua: this.meta.agent,
-      _loc: this.meta.locale,
-    };
-    if (this.strategy && this.secret) {
-      const strategy = this.strategy.toUpperCase();
-      if (strategy === "HMAC") {
-        const data = [
-          this.deck,
-          this.template,
-          this.version || "",
-          this.extension || "",
-          toQuery(Object.assign(defaultsWithoutV, this.variables, extra), options),
-        ];
-        const __hmac = FlyyerRender.signHMAC(data.join("#"), this.secret);
-        return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra, { __hmac }), options);
-      } else if (strategy === "JWT") {
-        const data = {
-          d: this.deck,
-          t: this.template,
-          v: this.version,
-          e: this.extension,
-          // jwt defaults
-          i: this.meta.id,
-          w: this.meta.width,
-          h: this.meta.height,
-          r: this.meta.resolution,
-          u: this.meta.agent,
-          l: this.meta.locale,
-          var: this.variables,
-        };
-        const __jwt = FlyyerRender.signJWT(data, this.secret);
-        return toQuery(Object.assign({ __jwt }, defaultV, extra), options);
-      }
+  public static sign<T>(
+    deck: FlyyerRenderParams<T>["deck"],
+    template: FlyyerRenderParams<T>["template"],
+    version: FlyyerRenderParams<T>["version"],
+    extension: FlyyerRenderParams<T>["extension"],
+    variables: FlyyerRenderParams<T>["variables"],
+    meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
+    strategy: FlyyerRenderParams<T>["strategy"],
+    secret: FlyyerRenderParams<T>["secret"],
+  ): string {
+    if (!strategy && !secret) return "";
+    if (!secret)
+      throw new Error(
+        "Missing `secret`. You can find it in your deck settings: https://flyyer.io/dashboard/_/library/_/latest/manage",
+      );
+    if (!strategy) throw new Error("Missing `strategy`. Valid options are `HMAC` or `JWT`.");
+
+    // @ts-expect-error Ignore type
+    strategy = strategy.toUpperCase();
+    if (strategy === "HMAC") {
+      const defaults = {
+        __id: meta.id,
+        _w: meta.width,
+        _h: meta.height,
+        _res: meta.resolution,
+        _ua: meta.agent,
+        _loc: meta.locale,
+      };
+      const data = [deck, template, version || "", extension || "", toQuery(Object.assign(defaults, variables))];
+      return FlyyerRender.signHMAC(data.join("#"), secret);
     }
-    return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra), options);
+    if (strategy === "JWT") {
+      const data = {
+        d: deck,
+        t: template,
+        v: version,
+        e: extension,
+        // jwt defaults
+        i: meta.id,
+        w: meta.width,
+        h: meta.height,
+        r: meta.resolution,
+        u: meta.agent,
+        l: meta.locale,
+        var: variables,
+      };
+      return FlyyerRender.signJWT(data, secret);
+    }
+    throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
   }
 
-  /**
-   * Generate final URL you can use in your og:images.
-   * @example
-   * <meta property="og:image" content={flyyer.href()} />
-   * @example
-   * const flyyer = new FlyyerRender({ meta: { v: null } });
-   * <img src={flyyer.href()} />
-   */
-  public href(): string {
-    if (!this.tenant) throw new Error("Missing 'tenant' property");
-    if (!this.deck) throw new Error("Missing 'deck' property");
-    if (!this.template) throw new Error("Missing 'template' property");
-
-    const strategy = this.strategy && this.strategy.toUpperCase();
-    if (strategy && strategy !== "HMAC" && strategy !== "JWT")
-      throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
-    if (strategy && !this.secret)
-      throw new Error("Missing `secret`. You can find it in your project in Advanced settings.");
-    if (this.secret && !strategy)
-      throw new Error("Got `secret` but missing `strategy`. Valid options are `HMAC` or `JWT`.");
-    const base = "https://cdn.flyyer.io/r/v2";
-    const query = this.querystring(undefined, { addQueryPrefix: true });
-
-    if (strategy && strategy === "JWT") return `${base}/${this.tenant}${query}`;
-    let finalHref = `${base}/${this.tenant}/${this.deck}/${this.template}`;
-    if (this.version) finalHref += `.${this.version}`;
-    if (this.extension) finalHref += `.${this.extension}`;
-    return `${finalHref}${query}`;
+  public sign(
+    deck: FlyyerRenderParams<T>["deck"],
+    template: FlyyerRenderParams<T>["template"],
+    version: FlyyerRenderParams<T>["version"],
+    extension: FlyyerRenderParams<T>["extension"],
+    variables: FlyyerRenderParams<T>["variables"],
+    meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
+    strategy: FlyyerRenderParams<T>["strategy"],
+    secret: FlyyerRenderParams<T>["secret"],
+  ): string {
+    return FlyyerRender.sign(deck, template, version, extension, variables, meta, strategy, secret);
   }
 }

@@ -98,6 +98,22 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     return next;
   }
 
+  /**
+   * Override this method to implement signatures. Must be synchronous (no `Promise` allowed).
+   */
+  public sign(
+    deck: FlyyerRenderParams<T>["deck"],
+    template: FlyyerRenderParams<T>["template"],
+    version: FlyyerRenderParams<T>["version"],
+    extension: FlyyerRenderParams<T>["extension"],
+    variables: FlyyerRenderParams<T>["variables"],
+    meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
+    strategy: FlyyerRenderParams<T>["strategy"],
+    secret: FlyyerRenderParams<T>["secret"],
+  ): string {
+    return "";
+  }
+
   public querystring(extra?: any, options?: IStringifyOptions): string {
     const defaults = {
       __v: __V(this.meta.v),
@@ -124,12 +140,31 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
     if (isUndefined(this.template)) throw new Error("Missing 'template' property");
 
+    const strategy = this.strategy;
+    const secret = this.secret;
     const base = "https://cdn.flyyer.io/r/v2";
-    const query = this.querystring(undefined, { addQueryPrefix: true });
-    if (this.version) {
-      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}${query}`;
+    const signature = this.sign(
+      this.deck,
+      this.template,
+      this.version,
+      this.extension,
+      this.variables,
+      this.meta,
+      strategy,
+      secret,
+    );
+
+    if (strategy && strategy.toUpperCase() === "JWT") {
+      const __v = __V(this.meta.v);
+      const query = toQuery({ __jwt: signature, __v }, { addQueryPrefix: true });
+      return `${base}/${this.tenant}${query}`;
+    } else {
+      const query = this.querystring({ __hmac: signature || undefined }, { addQueryPrefix: true });
+      if (this.version) {
+        return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}${query}`;
+      }
+      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}${query}`;
     }
-    return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}${query}`;
   }
 
   /**

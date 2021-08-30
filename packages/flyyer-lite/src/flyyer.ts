@@ -71,7 +71,13 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   /**
    * Override this method to implement signatures. Must be synchronous (no `Promise` allowed).
    */
-  public sign(project: string, path: string, arg2: string, strategy: string | null, secret: string | null): string {
+  public sign(
+    project: FlyyerParams<T>["project"],
+    path: string, // normalized
+    params: string,
+    strategy: FlyyerParams<T>["strategy"],
+    secret: FlyyerParams<T>["secret"],
+  ): string {
     return "_";
   }
 
@@ -118,12 +124,9 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     const base = "https://cdn.flyyer.io/v2";
     const params = this.params() || "_";
     if (strategy && strategy.toUpperCase() === "JWT") {
-      const v = __V(this.meta.v);
-      if (v) {
-        return `${base}/${project}/jwt-${signature}?__v=${v}`;
-      } else {
-        return `${base}/${project}/jwt-${signature}`;
-      }
+      const __v = __V(this.meta.v);
+      const query = toQuery({ __v }, { addQueryPrefix: true });
+      return `${base}/${project}/jwt-${signature}${query}`;
     } else {
       return `${base}/${project}/${signature}/${params}/${path}`;
     }

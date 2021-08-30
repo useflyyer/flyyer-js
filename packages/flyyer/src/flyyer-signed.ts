@@ -1,4 +1,4 @@
-import { Flyyer as FlyyerBase, FlyyerVariables } from "@flyyer/flyyer-lite";
+import { Flyyer as FlyyerBase, FlyyerParams, FlyyerVariables } from "@flyyer/flyyer-lite";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 
@@ -11,7 +11,13 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
     const token = CREATE_JWT_TOKEN(data);
     return SIGN_JWT_TOKEN(token, secret);
   }
-  public sign(project: string, path: string, params: string, strategy?: string | null, secret?: string | null): string {
+  public static sign<T>(
+    project: FlyyerParams<T>["project"],
+    path: string, // normalized
+    params: string,
+    strategy: FlyyerParams<T>["strategy"],
+    secret: FlyyerParams<T>["secret"],
+  ): string {
     if (!strategy && !secret) return "_";
     if (!secret) {
       throw new Error(
@@ -31,5 +37,14 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
       return Flyyer.signJWT({ path, params }, secret);
     }
     throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
+  }
+  public sign(
+    project: FlyyerParams<T>["project"],
+    path: string, // normalized
+    params: string,
+    strategy: FlyyerParams<T>["strategy"],
+    secret: FlyyerParams<T>["secret"],
+  ): string {
+    return Flyyer.sign(project, path, params, strategy, secret);
   }
 }

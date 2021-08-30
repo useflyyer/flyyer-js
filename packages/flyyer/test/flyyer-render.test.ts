@@ -10,7 +10,7 @@ describe("FlyyerRender", () => {
     const executer = (args?: any) => new FlyyerRender(args).href();
 
     expect(() => executer()).toThrow("FlyyerRender constructor must not be empty");
-    expect(() => executer({ tenant: "" })).toThrow("Missing 'tenant' property");
+    expect(() => executer({ tenant: undefined })).toThrow("Missing 'tenant' property");
   });
 
   it("shallow clones properties but deep clones 'meta' property", () => {
@@ -124,7 +124,7 @@ describe("FlyyerRender", () => {
     });
     const href = flyyer.href();
     expect(href).toMatch(
-      /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\/deck\/template.jpeg\?__v=\d+&title=Hello\+world%21&__hmac=585f70d17f9842eb$/,
+      /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\/deck\/template.jpeg\?__v=\d+&title=Hello\+world%21&__hmac=6b631ae8c4ca2977$/,
     );
   });
 
