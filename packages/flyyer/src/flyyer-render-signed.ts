@@ -1,10 +1,10 @@
-import { FlyyerRender as FlyyerBase, toQuery } from "@flyyer/flyyer-lite";
+import { FlyyerRender as FlyyerBase, FlyyerVariables, toQuery } from "@flyyer/flyyer-lite";
 import type { IStringifyOptions } from "qs";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 import { __V } from "./v";
 
-export class FlyyerRender extends FlyyerBase {
+export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends FlyyerBase<T> {
   public static signHMAC(data: string, secret: string): string {
     const LENGTH = 16; // We only compare the first 16 chars.
     return SIGN_HMAC_DATA(data, secret).slice(0, LENGTH);

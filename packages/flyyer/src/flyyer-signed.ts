@@ -1,8 +1,8 @@
-import { Flyyer as FlyyerBase } from "@flyyer/flyyer-lite";
+import { Flyyer as FlyyerBase, FlyyerVariables } from "@flyyer/flyyer-lite";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 
-export class Flyyer extends FlyyerBase {
+export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerBase<T> {
   public static signHMAC(data: string, secret: string): string {
     const LENGTH = 16; // We only compare the first 16 chars.
     return SIGN_HMAC_DATA(data, secret).slice(0, LENGTH);
