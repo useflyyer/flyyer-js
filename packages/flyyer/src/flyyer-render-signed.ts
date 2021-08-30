@@ -25,18 +25,24 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
       _loc: this.meta.locale,
     };
     if (this.strategy && this.secret) {
-      if (this.strategy.toLowerCase() === "hmac") {
+      const strategy = this.strategy.toUpperCase();
+      if (strategy === "HMAC") {
         const data = [
           this.deck,
           this.template,
           this.version || "",
           this.extension || "",
           toQuery(Object.assign(defaultsWithoutV, this.variables, extra), options),
-        ].join("#");
-        const __hmac = FlyyerRender.signHMAC(data, this.secret);
+        ];
+        const __hmac = FlyyerRender.signHMAC(data.join("#"), this.secret);
         return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra, { __hmac }), options);
-      } else if (this.strategy.toLowerCase() === "jwt") {
-        const jwtDefaults = {
+      } else if (strategy === "JWT") {
+        const data = {
+          d: this.deck,
+          t: this.template,
+          v: this.version,
+          e: this.extension,
+          // jwt defaults
           i: this.meta.id,
           w: this.meta.width,
           h: this.meta.height,
@@ -45,15 +51,8 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
           l: this.meta.locale,
           var: this.variables,
         };
-        const data = {
-          d: this.deck,
-          t: this.template,
-          v: this.version,
-          e: this.extension,
-          ...jwtDefaults,
-        };
         const __jwt = FlyyerRender.signJWT(data, this.secret);
-        return toQuery(Object.assign({ __jwt, ...defaultV }), options);
+        return toQuery(Object.assign({ __jwt }, defaultV, extra), options);
       }
     }
     return toQuery(Object.assign(defaultV, defaultsWithoutV, this.variables, extra), options);
@@ -71,16 +70,18 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
     if (!this.tenant) throw new Error("Missing 'tenant' property");
     if (!this.deck) throw new Error("Missing 'deck' property");
     if (!this.template) throw new Error("Missing 'template' property");
-    if (this.strategy && this.strategy.toLowerCase() != "hmac" && this.strategy.toLowerCase() != "jwt")
+
+    const strategy = this.strategy && this.strategy.toUpperCase();
+    if (strategy && strategy !== "HMAC" && strategy !== "JWT")
       throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
-    if (this.strategy && !this.secret)
+    if (strategy && !this.secret)
       throw new Error("Missing `secret`. You can find it in your project in Advanced settings.");
-    if (this.secret && !this.strategy)
+    if (this.secret && !strategy)
       throw new Error("Got `secret` but missing `strategy`. Valid options are `HMAC` or `JWT`.");
     const base = "https://cdn.flyyer.io/r/v2";
     const query = this.querystring(undefined, { addQueryPrefix: true });
 
-    if (this.strategy && this.strategy.toLowerCase() === "jwt") return `${base}/${this.tenant}${query}`;
+    if (strategy && strategy === "JWT") return `${base}/${this.tenant}${query}`;
     let finalHref = `${base}/${this.tenant}/${this.deck}/${this.template}`;
     if (this.version) finalHref += `.${this.version}`;
     if (this.extension) finalHref += `.${this.extension}`;
