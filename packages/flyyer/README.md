@@ -158,7 +158,7 @@ const url = flyyer.href()
 // https://cdn.flyyer.io/v2/flyyer/default/main.jpeg?title=try+changing+this
 ```
 
-[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-1.png?raw=true&v=1)](https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=try+changing+this)
+[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-1.png?raw=true&v=1)](https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=try+changing+this)
 
 After installing this module you can format URLs. Here is an example with React.js, but note this can be used with any framework:
 
@@ -228,7 +228,7 @@ const flyyer = new FlyyerRender({
 <img src={flyyer.href()}>
 ```
 
-[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://cdn.flyyer.io/render/v2/flyyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
+[![Resultant flyyer live image](https://github.com/useflyyer/create-flyyer-app/blob/master/.github/assets/result-2.png?raw=true&v=1)](https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=awesome!+%F0%9F%98%83&description=Optional+description&_w=1080&_h=1920)
 
 **To create templates with React.js or Vue.js use [create-flyyer-app](https://github.com/useflyyer/create-flyyer-app) 👈**
 

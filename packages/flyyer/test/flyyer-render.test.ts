@@ -1,4 +1,4 @@
-import { FlyyerRender, isEqualFlyyerRender } from "../src/render";
+import { FlyyerRender, isEqualFlyyerRender } from "..";
 
 describe("FlyyerRender", () => {
   it("FlyyerRender is instantiable", () => {
@@ -10,8 +10,7 @@ describe("FlyyerRender", () => {
     const executer = (args?: any) => new FlyyerRender(args).href();
 
     expect(() => executer()).toThrow("FlyyerRender constructor must not be empty");
-    expect(() => executer({ tenant: "" })).toThrow("Missing 'deck' property");
-    expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
+    expect(() => executer({ tenant: "" })).toThrow("Missing 'tenant' property");
   });
 
   it("shallow clones properties but deep clones 'meta' property", () => {
@@ -111,5 +110,63 @@ describe("FlyyerRender", () => {
     expect(isEqualFlyyerRender(flyyer0, flyyer0)).toEqual(true);
     expect(isEqualFlyyerRender(flyyer0, flyyer1)).toEqual(true);
     expect(isEqualFlyyerRender(flyyer0, flyyer2)).toEqual(false);
+  });
+
+  it("encodes url with hmac", () => {
+    const flyyer = new FlyyerRender({
+      ...DEFAULTS,
+      variables: {
+        title: "Hello world!",
+      },
+      extension: "jpeg",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "HMAC",
+    });
+    const href = flyyer.href();
+    expect(href).toMatch(
+      /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\/deck\/template.jpeg\?__v=\d+&title=Hello\+world%21&__hmac=585f70d17f9842eb$/,
+    );
+  });
+
+  it("encode url with jwt default values", () => {
+    const flyyer = new FlyyerRender({
+      ...DEFAULTS,
+      variables: {
+        title: "title",
+      },
+      version: 4,
+      extension: "jpeg",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "JWT",
+    });
+    const href = flyyer.href();
+    expect(href).toMatch(
+      /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\?__jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkIjoiZGVjayIsInQiOiJ0ZW1wbGF0ZSIsInYiOjQsImUiOiJqcGVnIiwidmFyIjp7InRpdGxlIjoidGl0bGUifX0.d_25VySY-Lfhwm3L2C-tNFwD7Zrh3cx_svyDEfkP2FE&__v=\d+$/,
+    );
+  });
+
+  it("encode url with jwt with meta", () => {
+    const flyyer = new FlyyerRender({
+      ...DEFAULTS,
+      variables: {
+        title: "title",
+      },
+      meta: {
+        agent: "whatsapp",
+        locale: "es-CL",
+        height: 100,
+        width: "200",
+        id: "dev forgot to encode",
+        v: null,
+      },
+      version: 4,
+      extension: "jpeg",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "JWT",
+    });
+    const href = flyyer.href();
+    expect(href).toMatch(
+      /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\?__jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkIjoiZGVjayIsInQiOiJ0ZW1wbGF0ZSIsInYiOjQsImUiOiJqcGVnIiwiaSI6ImRldiBmb3Jnb3QgdG8gZW5jb2RlIiwidyI6IjIwMCIsImgiOjEwMCwidSI6IndoYXRzYXBwIiwibCI6ImVzLUNMIiwidmFyIjp7InRpdGxlIjoidGl0bGUifX0.WFfRe-mniiftEwp-J3lFkV3ME0iXHUyg5QHwEgMKW88$/,
+    );
   });
 });
