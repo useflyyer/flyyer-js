@@ -67,7 +67,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public tenant: string;
   public deck: string;
   public template: string;
-  public version: number | null;
+  public version: string | number | null;
   public extension: FlyyerExtension;
   public variables: T;
   public meta: FlyyerMetaVariables;

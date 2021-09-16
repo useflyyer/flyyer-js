@@ -6,7 +6,7 @@ export interface FlyyerCommonParams<T extends FlyyerVariables> {
   /**
    * Optional. Leave empty `""` or as `_` to always grab the latest version.
    */
-  version?: number | null;
+  version?: string | number | null;
 
   /**
    * Supported extensions are: `"jpeg" | "jpg" | "png" | "webp"`
