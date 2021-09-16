@@ -1,6 +1,6 @@
 {
   "name": "@flyyer/flyyer-lite",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "Flyyer.io helper classes and methods to generate smart URL to render images.",
   "keywords": [
     "flyyer",
