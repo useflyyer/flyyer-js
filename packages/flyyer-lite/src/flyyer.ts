@@ -2,6 +2,7 @@ import type { IStringifyOptions } from "qs";
 
 import { FlyyerCommonParams } from "./common";
 import { FlyyerExtension } from "./ext";
+import { invariant } from "./invariant";
 import { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
 import { FlyyerPath, normalizePath } from "./paths";
 import { toQuery } from "./query";
@@ -57,7 +58,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   public strategy: "JWT" | "HMAC" | null;
 
   public constructor(args: FlyyerParams<T>) {
-    if (!args) throw new TypeError("Flyyer constructor must not be empty");
+    invariant(args, "Flyyer constructor must not be empty. Expected object with 'project' property.");
 
     this.project = args.project;
     this.path = args.path;
@@ -113,7 +114,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
    */
   public href(): string {
     const project = this.project;
-    if (isUndefined(project)) throw new Error("Missing 'project' property");
+    invariant(!isUndefined(project), "Missing 'project' property");
 
     const path = normalizePath(this.path);
 

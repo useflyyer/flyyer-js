@@ -2,6 +2,7 @@ import type { IStringifyOptions } from "qs";
 
 import { FlyyerCommonParams } from "./common";
 import { FlyyerExtension } from "./ext";
+import { invariant } from "./invariant";
 import { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
 import { toQuery } from "./query";
 import { isUndefined } from "./utils";
@@ -75,7 +76,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public strategy: "JWT" | "HMAC" | null;
 
   public constructor(args: FlyyerRenderParams<T>) {
-    if (!args) throw new TypeError("FlyyerRender constructor must not be empty");
+    invariant(args, "FlyyerRender constructor must not be empty");
 
     this.tenant = args.tenant;
     this.deck = args.deck;
@@ -136,9 +137,9 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
    * <img src={flyyer.href()} />
    */
   public href(): string {
-    if (isUndefined(this.tenant)) throw new Error("Missing 'tenant' property");
-    if (isUndefined(this.deck)) throw new Error("Missing 'deck' property");
-    if (isUndefined(this.template)) throw new Error("Missing 'template' property");
+    invariant(!isUndefined(this.tenant), "Missing 'tenant' property");
+    invariant(!isUndefined(this.deck), "Missing 'deck' property");
+    invariant(!isUndefined(this.template), "Missing 'template' property");
 
     const strategy = this.strategy;
     const secret = this.secret;
