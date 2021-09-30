@@ -1,6 +1,6 @@
-import { isEqualFlyyer } from "@flyyer/flyyer-lite";
+import { dequal } from "dequal/lite";
 
-import { Flyyer } from "..";
+import { Flyyer, isEqualFlyyer } from "../dist/index";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
@@ -105,6 +105,33 @@ describe("Flyyer", () => {
     );
   });
 
+  it("sets 'default' image as '_def' param in JWT", () => {
+    const flyyer0 = new Flyyer({
+      project: "project",
+      path: "path",
+      default: "/static/product/1.png",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "JWT",
+      meta: { v: null },
+    });
+    expect(flyyer0.href()).toEqual(
+      "https://cdn.flyyer.io/v2/project/jwt-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjoicGF0aCIsInBhcmFtcyI6Il9kZWY9JTJGc3RhdGljJTJGcHJvZHVjdCUyRjEucG5nIn0.W-aMsd4jakMYftprBmOCFxdR67xMPKbdvLDgPLFv0Ws",
+    );
+  });
+  it("sets 'default' image as '_def' param in HMAC", () => {
+    const flyyer0 = new Flyyer({
+      project: "project",
+      path: "path",
+      default: "/static/product/1.png",
+      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
+      strategy: "HMAC",
+      meta: { v: null },
+    });
+    expect(flyyer0.href()).toEqual(
+      "https://cdn.flyyer.io/v2/project/89312d0aaddd60fe/_def=%2Fstatic%2Fproduct%2F1.png/path",
+    );
+  });
+
   it("compares two instances", async () => {
     const flyyer0 = new Flyyer({
       project: "project",
@@ -115,8 +142,8 @@ describe("Flyyer", () => {
     const flyyer1 = new Flyyer({ project: "project", path: ["/products", "1"], variables: { title: "Hello" } });
     const flyyer2 = new Flyyer({ project: "project", path: ["/products", "1"], variables: { title: "Bye" } });
     expect(flyyer0.href()).not.toEqual(flyyer1.href()); // different __v
-    expect(isEqualFlyyer(flyyer0, flyyer0)).toEqual(true);
-    expect(isEqualFlyyer(flyyer0, flyyer1)).toEqual(true);
-    expect(isEqualFlyyer(flyyer0, flyyer2)).toEqual(false);
+    expect(isEqualFlyyer(flyyer0, flyyer0, dequal)).toEqual(true);
+    expect(isEqualFlyyer(flyyer0, flyyer1, dequal)).toEqual(true);
+    expect(isEqualFlyyer(flyyer0, flyyer2, dequal)).toEqual(false);
   });
 });

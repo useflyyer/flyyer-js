@@ -86,16 +86,3 @@ export interface FlyyerMetaVariables {
    */
   v?: string | number | null | undefined;
 }
-
-/**
- * Compare two `FlyyerMetaVariables` object. Ignores `__v` param.
- */
-export function isEqualFlyyerMeta(ameta: FlyyerMetaVariables, bmeta: FlyyerMetaVariables): boolean {
-  const metas = ["width", "height", "agent", "id", "locale", "resolution"] as const;
-  for (const meta of metas) {
-    if (ameta[meta] !== bmeta[meta]) {
-      return false;
-    }
-  }
-  return true;
-}

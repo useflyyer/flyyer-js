@@ -1,13 +1,13 @@
 import type { IStringifyOptions } from "qs";
 
-import { FlyyerCommonParams } from "./common";
-import { FlyyerExtension } from "./ext";
+import type { FlyyerCommonParams } from "./common";
+import type { FlyyerExtension } from "./ext";
 import { invariant } from "./invariant";
-import { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
+import type { FlyyerMetaVariables } from "./meta";
 import { toQuery } from "./query";
 import { isUndefined } from "./utils";
 import { __V } from "./v";
-import { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
+import type { FlyyerVariables } from "./variables";
 
 /**
  * These are the parameters required (some are optional) to create an URL that will render Flyyer images.
@@ -170,22 +170,4 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public toString() {
     return this.href();
   }
-}
-
-/**
- * Compare two FlyyerRender instances. Ignores `__v` param.
- */
-export function isEqualFlyyerRender(
-  a: FlyyerRender,
-  b: FlyyerRender,
-  variablesCompareFn = isEqualFlyyerVariables,
-): boolean {
-  if (a === b) return true;
-  const attrs = ["tenant", "deck", "template", "version", "extension", "strategy", "secret"] as const;
-  for (const attr of attrs) {
-    if (a[attr] !== b[attr]) {
-      return false;
-    }
-  }
-  return isEqualFlyyerMeta(a.meta, b.meta) && variablesCompareFn(a.variables, b.variables);
 }

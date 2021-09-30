@@ -1,10 +1,10 @@
 export { __V } from "./v";
 export { toQuery } from "./query";
 export { FlyyerCommonParams } from "./common";
-export { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
-export { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
+export { FlyyerMetaVariables } from "./meta";
+export { FlyyerVariables } from "./variables";
 export { FlyyerExtension } from "./ext";
 export { invariant } from "./invariant";
 export { normalizePath, FlyyerPath } from "./paths";
-export { Flyyer, FlyyerParams, isEqualFlyyer } from "./flyyer";
-export { FlyyerRender, FlyyerRenderParams, isEqualFlyyerRender } from "./render";
+export { Flyyer, FlyyerParams } from "./flyyer";
+export { FlyyerRender, FlyyerRenderParams } from "./render";

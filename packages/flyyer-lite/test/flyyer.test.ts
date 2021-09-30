@@ -1,4 +1,4 @@
-import { Flyyer, isEqualFlyyer } from "../src/flyyer";
+import { Flyyer } from "../src/flyyer";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
@@ -74,18 +74,14 @@ describe("Flyyer", () => {
     expect(flyyer3.href()).toEqual("https://cdn.flyyer.io/v2/project/_/__v=false/");
   });
 
-  it("compares two instances", async () => {
-    const flyyer0 = new Flyyer({
-      project: "project",
-      path: "products/1",
-      variables: { title: "Hello" },
-      meta: { v: "anything" },
-    });
-    const flyyer1 = new Flyyer({ project: "project", path: ["/products", "1"], variables: { title: "Hello" } });
-    const flyyer2 = new Flyyer({ project: "project", path: ["/products", "1"], variables: { title: "Bye" } });
-    expect(flyyer0.href()).not.toEqual(flyyer1.href()); // different __v
-    expect(isEqualFlyyer(flyyer0, flyyer0)).toEqual(true);
-    expect(isEqualFlyyer(flyyer0, flyyer1)).toEqual(true);
-    expect(isEqualFlyyer(flyyer0, flyyer2)).toEqual(false);
+  it("sets 'default' image as '_def' param", () => {
+    const flyyer0 = new Flyyer({ project: "project", path: "path", default: "/static/product/1.png" });
+    expect(flyyer0.href()).toMatch(
+      /^https:\/\/cdn.flyyer.io\/v2\/project\/_\/__v=(\d+)&_def=%2Fstatic%2Fproduct%2F1.png\/path$/,
+    );
+    const flyyer1 = new Flyyer({ project: "project", path: "path", default: "https://www.flyyer.io/logo.png" });
+    expect(flyyer1.href()).toMatch(
+      /^https:\/\/cdn.flyyer.io\/v2\/project\/_\/__v=(\d+)&_def=https%3A%2F%2Fwww.flyyer.io%2Flogo.png\/path$/,
+    );
   });
 });

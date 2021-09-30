@@ -1,14 +1,14 @@
 import type { IStringifyOptions } from "qs";
 
-import { FlyyerCommonParams } from "./common";
-import { FlyyerExtension } from "./ext";
+import type { FlyyerCommonParams } from "./common";
+import type { FlyyerExtension } from "./ext";
 import { invariant } from "./invariant";
-import { FlyyerMetaVariables, isEqualFlyyerMeta } from "./meta";
+import type { FlyyerMetaVariables } from "./meta";
 import { FlyyerPath, normalizePath } from "./paths";
 import { toQuery } from "./query";
 import { isUndefined } from "./utils";
 import { __V } from "./v";
-import { FlyyerVariables, isEqualFlyyerVariables } from "./variables";
+import type { FlyyerVariables } from "./variables";
 
 /**
  * This class helps you creating URLs that will render Flyyer images.
@@ -34,6 +34,15 @@ export interface FlyyerParams<T extends FlyyerVariables> extends FlyyerCommonPar
   project: string;
 
   /**
+   * Preferred way of declaring the default social image to use along with Flyyer. It will be available as `{{ page.image }}` and `{{ flyyer.default }}`. **Use an absolute URL**, but relative URLs are also supported.
+   *
+   * Alternatively you can set a custom meta-tag but it was worst performance: `<meta property="flyyer:default" content="" />`.
+   *
+   * Values defined here takes precedence over `flyyer:default` meta-tag.
+   */
+  default?: string | undefined | null;
+
+  /**
    * Current page path we will use in conjunction with the base URL defined in the Flyyer's Dashboard of your project.
    * @example
    * const flyyer = new Flyyer({ path: "/" });
@@ -50,6 +59,7 @@ export interface FlyyerParams<T extends FlyyerVariables> extends FlyyerCommonPar
 }
 export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements FlyyerParams<T> {
   public project: string;
+  public default?: string | undefined | null;
   public path?: FlyyerPath;
   public extension?: FlyyerExtension | undefined | null;
   public variables: T;
@@ -62,6 +72,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
 
     this.project = args.project;
     this.path = args.path;
+    this.default = args.default;
     this.extension = args.extension;
     this.variables = args.variables || ({} as T);
     this.meta = args.meta || {};
@@ -132,21 +143,4 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   public toString() {
     return this.href();
   }
-}
-
-/**
- * Compare two Flyyer instances. Ignores `__v` param.
- */
-export function isEqualFlyyer(a: Flyyer, b: Flyyer, variablesCompareFn = isEqualFlyyerVariables): boolean {
-  if (a === b) return true;
-  if (
-    a.project !== b.project ||
-    a.extension !== b.extension ||
-    a.strategy !== b.strategy ||
-    a.secret !== b.secret ||
-    normalizePath(a.path) !== normalizePath(b.path)
-  ) {
-    return false;
-  }
-  return isEqualFlyyerMeta(a.meta, b.meta) && variablesCompareFn(a.variables, b.variables);
 }

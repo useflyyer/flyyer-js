@@ -1,4 +1,4 @@
-import { FlyyerRender, isEqualFlyyerRender } from "../src/render";
+import { FlyyerRender } from "../src/render";
 
 describe("FlyyerRender", () => {
   it("FlyyerRender is instantiable", () => {
@@ -92,19 +92,5 @@ describe("FlyyerRender", () => {
     expect(href).toMatch(
       /^https:\/\/cdn.flyyer.io\/r\/v2\/tenant\/deck\/template\.png\?__id=dev\+forgot\+to\+encode&_w=200&_h=100&_ua=whatsapp&_loc=es-CL&title=title$/,
     );
-  });
-
-  it("compares two instances", async () => {
-    const flyyer0 = new FlyyerRender({
-      ...DEFAULTS,
-      variables: { title: "Hello" },
-      meta: { v: "anything" },
-    });
-    const flyyer1 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Hello" } });
-    const flyyer2 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Bye" } });
-    expect(flyyer0.href()).not.toEqual(flyyer1.href()); // different __v
-    expect(isEqualFlyyerRender(flyyer0, flyyer0)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer1)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer2)).toEqual(false);
   });
 });

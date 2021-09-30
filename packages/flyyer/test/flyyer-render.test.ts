@@ -1,3 +1,5 @@
+import { dequal } from "dequal/lite";
+
 import { FlyyerRender, isEqualFlyyerRender } from "..";
 
 describe("FlyyerRender", () => {
@@ -101,9 +103,9 @@ describe("FlyyerRender", () => {
     const flyyer1 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Hello" } });
     const flyyer2 = new FlyyerRender({ ...DEFAULTS, variables: { title: "Bye" } });
     expect(flyyer0.href()).not.toEqual(flyyer1.href()); // different __v
-    expect(isEqualFlyyerRender(flyyer0, flyyer0)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer1)).toEqual(true);
-    expect(isEqualFlyyerRender(flyyer0, flyyer2)).toEqual(false);
+    expect(isEqualFlyyerRender(flyyer0, flyyer0, dequal)).toEqual(true);
+    expect(isEqualFlyyerRender(flyyer0, flyyer1, dequal)).toEqual(true);
+    expect(isEqualFlyyerRender(flyyer0, flyyer2, dequal)).toEqual(false);
   });
 
   it("encodes url with hmac", () => {
