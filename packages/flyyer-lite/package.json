@@ -44,7 +44,7 @@
   "devDependencies": {
     "@flyyer/eslint-config": "^2.1.1",
     "eslint": "^7.32.0",
-    "eslint-plugin-jest": "^24.4.2",
+    "eslint-plugin-jest": "^24.5.0",
     "prettier": "^2.4.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",

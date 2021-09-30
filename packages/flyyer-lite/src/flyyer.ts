@@ -54,8 +54,8 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   public extension: FlyyerExtension;
   public variables: T;
   public meta: FlyyerMetaVariables;
-  public secret: string | null;
-  public strategy: "JWT" | "HMAC" | null;
+  public secret: string | undefined | null;
+  public strategy: "JWT" | "HMAC" | undefined | null;
 
   public constructor(args: FlyyerParams<T>) {
     invariant(args, "Flyyer constructor must not be empty. Expected object with 'project' property.");

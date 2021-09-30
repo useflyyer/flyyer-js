@@ -6,12 +6,12 @@ export interface FlyyerCommonParams<T extends FlyyerVariables> {
   /**
    * Optional. Leave empty `""` or as `_` to always grab the latest version.
    */
-  version?: string | number | null;
+  version?: string | number | undefined | null;
 
   /**
    * Supported extensions are: `"jpeg" | "jpg" | "png" | "webp"`
    */
-  extension?: FlyyerExtension | null;
+  extension?: FlyyerExtension | undefined | null;
 
   /**
    * JS serializable variables.
@@ -24,7 +24,7 @@ export interface FlyyerCommonParams<T extends FlyyerVariables> {
    * console.log(flyyer.href())
    * // https://cdn.flyyer.io/v2/flyyer-com/_/title=Hello+world&image=https%3A%2F%2Fexample.com%2Flogo.png/
    */
-  variables?: T | null;
+  variables?: T | undefined | null;
 
   /**
    * Meta variables usually have values assigned by Flyyer depending on how and where images are rendered.
@@ -45,8 +45,8 @@ export interface FlyyerCommonParams<T extends FlyyerVariables> {
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_/?__v=disabled`
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/marketplace`
    */
-  meta?: FlyyerMetaVariables | null;
+  meta?: FlyyerMetaVariables | undefined | null;
 
-  secret?: string | undefined | null;
+  secret?: string | undefined | undefined | null;
   strategy?: "JWT" | "HMAC" | undefined | null;
 }

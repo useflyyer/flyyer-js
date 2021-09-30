@@ -68,12 +68,12 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public tenant: string;
   public deck: string;
   public template: string;
-  public version: string | number | null;
+  public version: string | number | undefined | null;
   public extension: FlyyerExtension;
   public variables: T;
   public meta: FlyyerMetaVariables;
-  public secret: string | null;
-  public strategy: "JWT" | "HMAC" | null;
+  public secret: string | undefined | null;
+  public strategy: "JWT" | "HMAC" | undefined | null;
 
   public constructor(args: FlyyerRenderParams<T>) {
     invariant(args, "FlyyerRender constructor must not be empty");

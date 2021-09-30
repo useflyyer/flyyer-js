@@ -29,13 +29,13 @@ export interface FlyyerMetaVariables {
    * "twitter" // _ua=twitter
    * "instagram" // _ua=instagram
    */
-  agent?: string | null;
+  agent?: string | undefined | null;
   /*
    * Force language instead of using the viewer's locale.
    * This is useful when you have your website with international routes (eg: `example.com/de` or `de.example.com`)
    * Converted to `_loc=` on `flyyer.href()` if set.
    */
-  locale?: string | null;
+  locale?: string | undefined | null;
   /**
    * Pixels (integer value).
    * Converted to `_w=` on `flyyer.href()` if set.
@@ -46,7 +46,7 @@ export interface FlyyerMetaVariables {
    * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/jobs`
    */
-  width?: string | number | null;
+  width?: string | number | undefined | null;
   /**
    * Pixels (integer value).
    * Converted to `_h=` on `flyyer.href()` if set.
@@ -58,17 +58,17 @@ export interface FlyyerMetaVariables {
    * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?_w=1080&_h=1080`
    * `https://cdn.flyyer.io/v2/flyyer-com/_/_w=1080&_h=1080/jobs`
    */
-  height?: string | number | null;
+  height?: string | number | undefined | null;
   /**
    * Range from [0.0, 1.0]
    * Converted to `_res=` on `flyyer.href()` if set.
    */
-  resolution?: string | number | null;
+  resolution?: string | number | undefined | null;
   /**
    * To identify your links on the analytics report
    * Converted to `__id=` on `flyyer.href()` if set.
    */
-  id?: string | number | null;
+  id?: string | number | undefined | null;
   /**
    * Cache invalidator, set to `null` or empty string `""` to disable it.
    * Converted to `__v=` on `flyyer.href()` if set.
@@ -79,12 +79,12 @@ export interface FlyyerMetaVariables {
    * @example
    * __v=null // disabled
    * __v="1" // constant
-   * __v=undefined // `__v=123123` a timestamp will be used.
+   * undefined|__ // `__v=123123` a timestamp will be used.
    * @example
    * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Hello&__v=123123` // by default is a timestamp
    * `https://cdn.flyyer.io/r/v2/flyyer/default/main.jpeg?title=Hello&__v=` // disabled to use browser's cache
    */
-  v?: string | number | null;
+  v?: string | number | null | undefined;
 }
 
 /**
