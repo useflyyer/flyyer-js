@@ -1,4 +1,10 @@
-import { FlyyerRender as FlyyerBase, FlyyerRenderParams, FlyyerVariables, toQuery } from "@flyyer/flyyer-lite";
+import {
+  FlyyerRender as FlyyerBase,
+  FlyyerRenderParams,
+  FlyyerVariables,
+  toQuery,
+  invariant,
+} from "@flyyer/flyyer-lite";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 
@@ -23,15 +29,14 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
     secret: FlyyerRenderParams<T>["secret"],
   ): string {
     if (!strategy && !secret) return "";
-    if (!secret)
-      throw new Error(
-        "Missing `secret`. You can find it in your deck settings: https://flyyer.io/dashboard/_/library/_/latest/manage",
-      );
-    if (!strategy) throw new Error("Missing `strategy`. Valid options are `HMAC` or `JWT`.");
+    invariant(
+      secret,
+      "Missing `secret`. You can find it in your deck settings: https://flyyer.io/dashboard/_/library/_/latest/manage",
+    );
+    invariant(strategy, "Missing `strategy`. Valid options are `HMAC` or `JWT`.");
 
-    // @ts-expect-error Ignore type
-    strategy = strategy.toUpperCase();
-    if (strategy === "HMAC") {
+    const normalized = strategy.toUpperCase();
+    if (normalized === "HMAC") {
       const defaults = {
         __id: meta.id,
         _w: meta.width,
@@ -43,7 +48,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
       const data = [deck, template, version || "", extension || "", toQuery(Object.assign(defaults, variables))];
       return FlyyerRender.signHMAC(data.join("#"), secret);
     }
-    if (strategy === "JWT") {
+    if (normalized === "JWT") {
       const data = {
         d: deck,
         t: template,
@@ -60,7 +65,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
       };
       return FlyyerRender.signJWT(data, secret);
     }
-    throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
+    invariant(false, "Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
   }
 
   public sign(

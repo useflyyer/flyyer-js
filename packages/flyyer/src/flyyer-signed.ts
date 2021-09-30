@@ -1,4 +1,4 @@
-import { Flyyer as FlyyerBase, FlyyerParams, FlyyerVariables } from "@flyyer/flyyer-lite";
+import { Flyyer as FlyyerBase, FlyyerParams, FlyyerVariables, invariant } from "@flyyer/flyyer-lite";
 
 import { CREATE_JWT_TOKEN, SIGN_JWT_TOKEN, SIGN_HMAC_DATA } from "./jwt";
 
@@ -19,14 +19,11 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
     secret: FlyyerParams<T>["secret"],
   ): string {
     if (!strategy && !secret) return "_";
-    if (!secret) {
-      throw new Error(
-        "Missing `secret`. You can find it in your project in Advanced settings: https://flyyer.io/dashboard/_/projects/_/advanced",
-      );
-    }
-    if (!strategy) {
-      throw new Error("Missing `strategy`. Valid options are `HMAC` or `JWT`.");
-    }
+    invariant(
+      secret,
+      "Missing `secret`. You can find it in your project in Advanced settings: https://flyyer.io/dashboard/_/projects/_/advanced",
+    );
+    invariant(strategy, "Missing `strategy`. Valid options are `HMAC` or `JWT`.");
 
     const str = strategy.toUpperCase();
     if (str === "HMAC") {
@@ -36,7 +33,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
     if (str === "JWT") {
       return Flyyer.signJWT({ path, params }, secret);
     }
-    throw new Error("Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
+    invariant(false, "Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
   }
   public sign(
     project: FlyyerParams<T>["project"],
