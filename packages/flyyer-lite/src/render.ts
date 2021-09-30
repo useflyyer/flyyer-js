@@ -5,7 +5,7 @@ import type { FlyyerExtension } from "./ext";
 import { invariant } from "./invariant";
 import type { FlyyerMetaVariables } from "./meta";
 import { toQuery } from "./query";
-import { isUndefined } from "./utils";
+import { CDN, isUndefined } from "./utils";
 import { __V } from "./v";
 import type { FlyyerVariables } from "./variables";
 
@@ -81,12 +81,12 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     this.tenant = args.tenant;
     this.deck = args.deck;
     this.template = args.template;
-    this.version = args.version || null;
+    this.version = args.version;
     this.extension = args.extension;
     this.variables = args.variables || ({} as T);
     this.meta = args.meta || {};
-    this.secret = args.secret || null;
-    this.strategy = args.strategy || null;
+    this.secret = args.secret;
+    this.strategy = args.strategy;
   }
 
   /**
@@ -101,19 +101,18 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
     strategy: FlyyerRenderParams<T>["strategy"],
     secret: FlyyerRenderParams<T>["secret"],
-  ): string {
-    return "";
-  }
+  ): string | undefined | void {}
 
   public querystring(extra?: any, options?: IStringifyOptions): string {
+    const meta = this.meta;
     const defaults = {
-      __v: __V(this.meta.v),
-      __id: this.meta.id,
-      _w: this.meta.width,
-      _h: this.meta.height,
-      _res: this.meta.resolution,
-      _ua: this.meta.agent,
-      _loc: this.meta.locale,
+      __v: __V(meta.v),
+      __id: meta.id,
+      _w: meta.width,
+      _h: meta.height,
+      _res: meta.resolution,
+      _ua: meta.agent,
+      _loc: meta.locale,
     };
     return toQuery(Object.assign(defaults, this.variables, extra), options);
   }
@@ -127,37 +126,26 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
    * <img src={flyyer.href()} />
    */
   public href(): string {
-    invariant(!isUndefined(this.tenant), "Missing 'tenant' property");
-    invariant(!isUndefined(this.deck), "Missing 'deck' property");
-    invariant(!isUndefined(this.template), "Missing 'template' property");
+    const { tenant, deck, template, strategy, secret, version, extension, variables, meta } = this;
+    invariant(!isUndefined(tenant), "Missing 'tenant' property");
+    invariant(!isUndefined(deck), "Missing 'deck' property");
+    invariant(!isUndefined(template), "Missing 'template' property");
 
-    const strategy = this.strategy;
-    const secret = this.secret;
-    const root = "https://cdn.flyyer.io/r/v2";
-    const signature = this.sign(
-      this.deck,
-      this.template,
-      this.version,
-      this.extension,
-      this.variables,
-      this.meta,
-      strategy,
-      secret,
-    );
+    const signature = this.sign(deck, template, version, extension, variables, meta, strategy, secret);
 
     if (strategy && strategy.toUpperCase() === "JWT") {
-      const __v = __V(this.meta.v);
+      const __v = __V(meta.v);
       const query = toQuery({ __jwt: signature, __v }, { addQueryPrefix: true });
-      return `${root}/${this.tenant}${query}`;
+      return `${CDN}/r/v2/${tenant}${query}`;
     } else {
-      const query = this.querystring({ __hmac: signature || undefined }, { addQueryPrefix: true });
-      const base = `${root}/${this.tenant}/${this.deck}/${this.template}`;
-      if (this.version && this.extension) {
-        return `${base}.${this.version}.${this.extension}${query}`;
-      } else if (this.version) {
-        return `${base}.${this.version}${query}`;
-      } else if (this.extension) {
-        return `${base}.${this.extension}${query}`;
+      const query = this.querystring({ __hmac: signature }, { addQueryPrefix: true });
+      const base = `${CDN}/r/v2/${tenant}/${deck}/${template}`;
+      if (version && extension) {
+        return `${base}.${version}.${extension}${query}`;
+      } else if (version) {
+        return `${base}.${version}${query}`;
+      } else if (extension) {
+        return `${base}.${extension}${query}`;
       } else {
         return `${base}${query}`;
       }

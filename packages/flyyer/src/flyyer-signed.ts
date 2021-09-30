@@ -17,7 +17,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
     params: string,
     strategy: FlyyerParams<T>["strategy"],
     secret: FlyyerParams<T>["secret"],
-  ): string {
+  ): string | undefined {
     if (!strategy && !secret) return "_";
     invariant(
       secret,
@@ -41,7 +41,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
     params: string,
     strategy: FlyyerParams<T>["strategy"],
     secret: FlyyerParams<T>["secret"],
-  ): string {
+  ): string | undefined {
     return Flyyer.sign(project, path, params, strategy, secret);
   }
 }

@@ -27,8 +27,8 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
     meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
     strategy: FlyyerRenderParams<T>["strategy"],
     secret: FlyyerRenderParams<T>["secret"],
-  ): string {
-    if (!strategy && !secret) return "";
+  ): string | undefined {
+    if (!strategy && !secret) return undefined;
     invariant(
       secret,
       "Missing `secret`. You can find it in your deck settings: https://flyyer.io/dashboard/_/library/_/latest/manage",
@@ -77,7 +77,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> extends F
     meta: NonNullable<FlyyerRenderParams<T>["meta"]>,
     strategy: FlyyerRenderParams<T>["strategy"],
     secret: FlyyerRenderParams<T>["secret"],
-  ): string {
+  ): string | undefined {
     return FlyyerRender.sign(deck, template, version, extension, variables, meta, strategy, secret);
   }
 }

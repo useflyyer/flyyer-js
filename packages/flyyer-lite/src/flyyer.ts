@@ -6,7 +6,7 @@ import { invariant } from "./invariant";
 import type { FlyyerMetaVariables } from "./meta";
 import { FlyyerPath, normalizePath } from "./paths";
 import { toQuery } from "./query";
-import { isUndefined } from "./utils";
+import { CDN, isUndefined } from "./utils";
 import { __V } from "./v";
 import type { FlyyerVariables } from "./variables";
 
@@ -76,8 +76,8 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     this.extension = args.extension;
     this.variables = args.variables || ({} as T);
     this.meta = args.meta || {};
-    this.secret = args.secret || null;
-    this.strategy = args.strategy || null;
+    this.secret = args.secret;
+    this.strategy = args.strategy;
   }
 
   /**
@@ -89,9 +89,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     params: string,
     strategy: FlyyerParams<T>["strategy"],
     secret: FlyyerParams<T>["secret"],
-  ): string {
-    return "_";
-  }
+  ): string | undefined | void {}
 
   public params(extra?: any, options?: IStringifyOptions): string {
     const meta = this.meta;
@@ -126,14 +124,13 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     const secret = this.secret;
     const signature = this.sign(project, path, this.params({ __v: undefined }), strategy, secret);
 
-    const base = "https://cdn.flyyer.io/v2";
     const params = this.params() || "_";
     if (strategy && strategy.toUpperCase() === "JWT") {
       const __v = __V(this.meta.v);
       const query = toQuery({ __v }, { addQueryPrefix: true });
-      return `${base}/${project}/jwt-${signature}${query}`;
+      return `${CDN}/v2/${project}/jwt-${signature}${query}`;
     } else {
-      return `${base}/${project}/${signature}/${params}/${path}`;
+      return `${CDN}/v2/${project}/${signature || "_"}/${params}/${path}`;
     }
   }
 
