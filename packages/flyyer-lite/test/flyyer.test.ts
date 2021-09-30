@@ -13,15 +13,6 @@ describe("Flyyer", () => {
     expect(() => executer({ project: "" })).not.toThrow();
   });
 
-  it("shallow clones properties but deep clones 'meta' property", () => {
-    const flyyer = new Flyyer({ project: "project", meta: { width: 1080 } });
-    const clone = flyyer.clone();
-    clone.project = "flyyer";
-    clone.meta.width = 400;
-    expect(clone.project).not.toEqual(flyyer.project);
-    expect(clone.meta.width).not.toEqual(flyyer.meta.width);
-  });
-
   it("without path fallbacks to root", () => {
     const flyyer = new Flyyer({ project: "project" });
     expect(flyyer.href()).toMatch(/^https:\/\/cdn.flyyer.io\/v2\/project\/_\/__v=(\d+)\/$/);

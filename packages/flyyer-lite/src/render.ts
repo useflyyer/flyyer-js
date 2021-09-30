@@ -90,16 +90,6 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   }
 
   /**
-   * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
-   * **Be aware `variables` are shallow cloned.**
-   */
-  public clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerRenderParams<K>>): FlyyerRender<K> {
-    // @ts-expect-error Constructor
-    const next = new this.constructor<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
-    return next;
-  }
-
-  /**
    * Override this method to implement signatures. Must be synchronous (no `Promise` allowed).
    */
   public sign(

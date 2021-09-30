@@ -15,15 +15,6 @@ describe("Flyyer", () => {
     expect(() => executer({ project: "" })).not.toThrow();
   });
 
-  it("shallow clones properties but deep clones 'meta' property", () => {
-    const flyyer = new Flyyer({ project: "project", meta: { width: 1080 } });
-    const clone = flyyer.clone();
-    clone.project = "flyyer";
-    clone.meta.width = 400;
-    expect(clone.project).not.toEqual(flyyer.project);
-    expect(clone.meta.width).not.toEqual(flyyer.meta.width);
-  });
-
   it("without path fallbacks to root", () => {
     const flyyer = new Flyyer({ project: "project" });
     expect(flyyer.href()).toMatch(/^https:\/\/cdn.flyyer.io\/v2\/project\/_\/__v=(\d+)\/$/);
@@ -93,7 +84,7 @@ describe("Flyyer", () => {
       strategy: "HMAC",
       meta: { width: 1080 },
     });
-    const flyyer2 = flyyer1.clone({ meta: { ...flyyer1.meta, v: 123 } });
+    const flyyer2 = new Flyyer({ ...flyyer1, meta: { ...flyyer1.meta, v: 123 } });
 
     // if __v changes the signature remains the same
     const regex = /^https:\/\/cdn.flyyer.io\/v2\/project\/c5bd759442845a20\/__v=(\d+)&_w=1080\/products\/1$/;

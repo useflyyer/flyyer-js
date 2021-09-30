@@ -14,15 +14,6 @@ describe("FlyyerRender", () => {
     expect(() => executer({ tenant: "", deck: "", template: "" })).not.toThrow();
   });
 
-  it("shallow clones properties but deep clones 'meta' property", () => {
-    const flyyer = new FlyyerRender({ tenant: "tenant", deck: "deck", template: "template", meta: { width: 1080 } });
-    const clone = flyyer.clone();
-    clone.deck = "flyyer";
-    clone.meta.width = 400;
-    expect(clone.deck).not.toEqual(flyyer.deck);
-    expect(clone.meta.width).not.toEqual(flyyer.meta.width);
-  });
-
   const DEFAULTS = {
     tenant: "tenant",
     deck: "deck",
