@@ -46,6 +46,8 @@ const flyyer = new Flyyer({
   project: "website-com",
   // Relative path
   path: `/path/to/product`,
+  // Optional: preserve and re-use your default or current image.
+  // default: "/images/default-image.png",
 });
 
 console.log(flyyer.href());
@@ -64,6 +66,7 @@ function SEO() {
   const flyyer = new Flyyer({
     project: "my-project",
     path: router.asPath,
+    // default: product["image"],
   });
   // ...
 }
@@ -107,6 +110,9 @@ const flyyer = new Flyyer({
   project: "website-com",
   // The current path of your website (by default it's `/`).
   path: "/path/to/product",
+
+  // [Optional] Keep and re-use your current image.
+  default: product["image"],
 
   // [Optional] In case you want to provide information that is not present in your page set it here.
   variables: {
@@ -257,8 +263,9 @@ import {
   isEqualFlyyerRender,
   isEqualFlyyerMeta,
 } from "@flyyer/flyyer";
+import { dequal } from "dequal/lite";
 
-const boolean = isEqualFlyyer(fio1, fio2);
+const boolean = isEqualFlyyer(fio1, fio2, dequal);
 ```
 
 ## Test
