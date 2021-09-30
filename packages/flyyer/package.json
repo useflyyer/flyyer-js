@@ -11,7 +11,7 @@
     "react"
   ],
   "author": "Patricio López Juri <patricio@flyyer.io>",
-  "module": "dist/flyyer-js.esm.js",
+  "module": "dist/flyyer.esm.js",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@flyyer/eslint-config": "^2.1.1",
+    "dequal": "^2.0.2",
     "eslint": "^7.32.0",
     "eslint-plugin-jest": "^24.5.0",
     "prettier": "^2.4.1",

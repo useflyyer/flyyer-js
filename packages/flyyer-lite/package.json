@@ -11,7 +11,7 @@
     "react"
   ],
   "author": "Patricio López Juri <patricio@flyyer.io>",
-  "module": "dist/flyyer-js.esm.js",
+  "module": "dist/flyyer-lite.esm.js",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
