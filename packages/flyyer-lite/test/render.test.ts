@@ -31,6 +31,7 @@ describe("FlyyerRender", () => {
 
   it("no queryparams no '?'", () => {
     const flyyer = new FlyyerRender({
+      extension: "jpeg",
       ...DEFAULTS,
       meta: { v: null },
     });
@@ -39,6 +40,7 @@ describe("FlyyerRender", () => {
 
   it("encodes url", () => {
     const flyyer = new FlyyerRender({
+      extension: "jpeg",
       ...DEFAULTS,
       variables: {
         title: "Hello world!",
@@ -54,6 +56,7 @@ describe("FlyyerRender", () => {
   it("encodes url and skips undefined values", () => {
     const flyyer = new FlyyerRender({
       ...DEFAULTS,
+      extension: "jpeg",
       variables: {
         title: "title",
         description: undefined,
@@ -66,6 +69,7 @@ describe("FlyyerRender", () => {
   it("encodes url and convert null values to empty string", () => {
     const flyyer = new FlyyerRender({
       ...DEFAULTS,
+      extension: "jpeg",
       variables: {
         title: "title",
         description: null,

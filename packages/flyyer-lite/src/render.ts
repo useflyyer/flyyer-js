@@ -68,12 +68,12 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
   public tenant: string;
   public deck: string;
   public template: string;
-  public version: string | number | undefined | null;
-  public extension: FlyyerExtension;
+  public version?: string | number | undefined | null;
+  public extension?: FlyyerExtension | undefined | null;
   public variables: T;
   public meta: FlyyerMetaVariables;
-  public secret: string | undefined | null;
-  public strategy: "JWT" | "HMAC" | undefined | null;
+  public secret?: string | undefined | null;
+  public strategy?: "JWT" | "HMAC" | undefined | null;
 
   public constructor(args: FlyyerRenderParams<T>) {
     invariant(args, "FlyyerRender constructor must not be empty");
@@ -82,7 +82,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     this.deck = args.deck;
     this.template = args.template;
     this.version = args.version || null;
-    this.extension = args.extension || "jpeg";
+    this.extension = args.extension;
     this.variables = args.variables || ({} as T);
     this.meta = args.meta || {};
     this.secret = args.secret || null;
@@ -143,7 +143,7 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
 
     const strategy = this.strategy;
     const secret = this.secret;
-    const base = "https://cdn.flyyer.io/r/v2";
+    const root = "https://cdn.flyyer.io/r/v2";
     const signature = this.sign(
       this.deck,
       this.template,
@@ -158,13 +158,19 @@ export class FlyyerRender<T extends FlyyerVariables = FlyyerVariables> implement
     if (strategy && strategy.toUpperCase() === "JWT") {
       const __v = __V(this.meta.v);
       const query = toQuery({ __jwt: signature, __v }, { addQueryPrefix: true });
-      return `${base}/${this.tenant}${query}`;
+      return `${root}/${this.tenant}${query}`;
     } else {
       const query = this.querystring({ __hmac: signature || undefined }, { addQueryPrefix: true });
-      if (this.version) {
-        return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.version}.${this.extension}${query}`;
+      const base = `${root}/${this.tenant}/${this.deck}/${this.template}`;
+      if (this.version && this.extension) {
+        return `${base}.${this.version}.${this.extension}${query}`;
+      } else if (this.version) {
+        return `${base}.${this.version}${query}`;
+      } else if (this.extension) {
+        return `${base}.${this.extension}${query}`;
+      } else {
+        return `${base}${query}`;
       }
-      return `${base}/${this.tenant}/${this.deck}/${this.template}.${this.extension}${query}`;
     }
   }
 

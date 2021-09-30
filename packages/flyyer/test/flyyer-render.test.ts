@@ -33,12 +33,13 @@ describe("FlyyerRender", () => {
       ...DEFAULTS,
       meta: { v: null },
     });
-    expect(flyyer.href()).toEqual("https://cdn.flyyer.io/r/v2/tenant/deck/template.jpeg");
+    expect(flyyer.href()).toEqual("https://cdn.flyyer.io/r/v2/tenant/deck/template");
   });
 
   it("encodes url", () => {
     const flyyer = new FlyyerRender({
       ...DEFAULTS,
+      extension: "jpeg",
       variables: {
         title: "Hello world!",
         description: "",
@@ -53,6 +54,7 @@ describe("FlyyerRender", () => {
   it("encodes url and skips undefined values", () => {
     const flyyer = new FlyyerRender({
       ...DEFAULTS,
+      extension: "jpeg",
       variables: {
         title: "title",
         description: undefined,
@@ -65,6 +67,7 @@ describe("FlyyerRender", () => {
   it("encodes url and convert null values to empty string", () => {
     const flyyer = new FlyyerRender({
       ...DEFAULTS,
+      extension: "jpeg",
       variables: {
         title: "title",
         description: null,

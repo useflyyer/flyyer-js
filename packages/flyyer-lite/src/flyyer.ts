@@ -51,18 +51,18 @@ export interface FlyyerParams<T extends FlyyerVariables> extends FlyyerCommonPar
 export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements FlyyerParams<T> {
   public project: string;
   public path?: FlyyerPath;
-  public extension: FlyyerExtension;
+  public extension?: FlyyerExtension | undefined | null;
   public variables: T;
   public meta: FlyyerMetaVariables;
-  public secret: string | undefined | null;
-  public strategy: "JWT" | "HMAC" | undefined | null;
+  public secret?: string | undefined | null;
+  public strategy?: "JWT" | "HMAC" | undefined | null;
 
   public constructor(args: FlyyerParams<T>) {
     invariant(args, "Flyyer constructor must not be empty. Expected object with 'project' property.");
 
     this.project = args.project;
     this.path = args.path;
-    this.extension = args.extension || "jpeg";
+    this.extension = args.extension;
     this.variables = args.variables || ({} as T);
     this.meta = args.meta || {};
     this.secret = args.secret || null;
@@ -82,24 +82,17 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
     return "_";
   }
 
-  /**
-   * Returns a new instance. Values are shallow cloned with the exception of 'meta' which is shallow cloned at its level.
-   * **Be aware `variables` are shallow cloned.**
-   */
-  public clone<K extends FlyyerVariables = T>(args?: Partial<FlyyerParams<K>>): Flyyer<K> {
-    // @ts-expect-error Constructor
-    const next = new this.constructor<K>(Object.assign({}, this, { meta: Object.assign({}, this.meta) }, args));
-    return next;
-  }
-
   public params(extra?: any, options?: IStringifyOptions): string {
+    const meta = this.meta;
     const defaults = {
-      __v: __V(this.meta.v),
-      __id: this.meta.id,
-      _w: this.meta.width,
-      _h: this.meta.height,
-      _res: this.meta.resolution,
-      _ua: this.meta.agent,
+      __v: __V(meta.v),
+      __id: meta.id,
+      _w: meta.width,
+      _h: meta.height,
+      _res: meta.resolution,
+      _ua: meta.agent,
+      _def: this.default,
+      _ext: this.extension,
     };
     return toQuery(Object.assign(defaults, this.variables, extra), options);
   }
