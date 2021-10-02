@@ -1,4 +1,6 @@
-import { stringify, IStringifyOptions } from "qs";
+import type { IStringifyOptions } from "qs";
+// @ts-expect-error Type
+import stringify from "qs/lib/stringify";
 
 /**
  * Internally used to convert an object to querystring.

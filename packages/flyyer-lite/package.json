@@ -38,8 +38,8 @@
     "prepare": "tsdx build"
   },
   "dependencies": {
-    "@types/qs": "^6.9.7",
-    "qs": "^6.10.1"
+    "@types/qs": "^6.5.3",
+    "qs": "^6.5.1 < 6.10"
   },
   "devDependencies": {
     "@flyyer/eslint-config": "^2.1.1",
