@@ -45,3 +45,17 @@ export function SIGN_JWT_TOKEN(token: string, secret: string): string {
 export function SIGN_HMAC_DATA(data: string, secret: string): string {
   return HmacSHA256(data, secret).toString();
 }
+
+export function DECODE_JWT_TOKEN(token: string): any {
+  const [encodedHeader, encodedData, signature] = token.split(".");
+  if (!encodedHeader || !encodedData || !signature) {
+    throw new Error("Invalid JWT token");
+  }
+  let data: any;
+  try {
+    data = JSON.parse(Buffer.from(encodedData, "base64").toString());
+  } catch (err) {
+    throw new Error("Invalid JWT token");
+  }
+  return data;
+}
