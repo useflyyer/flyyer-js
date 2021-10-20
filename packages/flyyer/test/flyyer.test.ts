@@ -1,6 +1,6 @@
 import { dequal } from "dequal/lite";
 
-import { Flyyer, isEqualFlyyer } from "../dist/index";
+import { Flyyer, isEqualFlyyer, DECODE_JWT_TOKEN } from "../dist/index";
 
 describe("Flyyer", () => {
   it("Flyyer is instantiable", () => {
@@ -92,32 +92,6 @@ describe("Flyyer", () => {
     expect(flyyer2.href()).toMatch(regex);
   });
 
-  it("encodes url with JWT signature", () => {
-    const flyyer1 = new Flyyer({
-      project: "project",
-      path: "/products/1",
-      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
-      strategy: "JWT",
-      meta: { v: null },
-    });
-    expect(flyyer1.href()).toEqual(
-      "https://cdn.flyyer.io/v2/project/jwt-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjoicHJvZHVjdHMvMSIsInBhcmFtcyI6IiJ9.KMAG3_NQkfou6rkBc3gYunVilfqNnFdVzKd2IrRmUz4",
-    );
-  });
-
-  it("sets 'default' image as '_def' param in JWT", () => {
-    const flyyer0 = new Flyyer({
-      project: "project",
-      path: "path",
-      default: "/static/product/1.png",
-      secret: "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx",
-      strategy: "JWT",
-      meta: { v: null },
-    });
-    expect(flyyer0.href()).toEqual(
-      "https://cdn.flyyer.io/v2/project/jwt-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjoicGF0aCIsInBhcmFtcyI6Il9kZWY9JTJGc3RhdGljJTJGcHJvZHVjdCUyRjEucG5nIn0.W-aMsd4jakMYftprBmOCFxdR67xMPKbdvLDgPLFv0Ws",
-    );
-  });
   it("sets 'default' image as '_def' param in HMAC", () => {
     const flyyer0 = new Flyyer({
       project: "project",
@@ -145,5 +119,109 @@ describe("Flyyer", () => {
     expect(isEqualFlyyer(flyyer0, flyyer0, dequal)).toEqual(true);
     expect(isEqualFlyyer(flyyer0, flyyer1, dequal)).toEqual(true);
     expect(isEqualFlyyer(flyyer0, flyyer2, dequal)).toEqual(false);
+  });
+
+  it("encodes url with JWT signature", () => {
+    const key = "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx";
+    const flyyer = new Flyyer({
+      project: "project",
+      path: "products/1",
+      secret: key,
+      strategy: "JWT",
+      meta: { v: null },
+    });
+    const token = flyyer
+      .href()
+      .match(/(jwt-)(.*)(\??)/g)?.[0]
+      ?.slice(4);
+    const decoded = token ? DECODE_JWT_TOKEN(token) : "";
+    expect(decoded["params"]).toEqual({ var: {} });
+    expect(decoded["path"]).toEqual("/products/1");
+  });
+
+  it("encodes url with JWT signature with variables", () => {
+    const key = "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx";
+    const flyyer = new Flyyer({
+      project: "project",
+      path: "products/1",
+      secret: key,
+      strategy: "JWT",
+      variables: { title: "Hello world!" },
+    });
+    const token = flyyer
+      .href()
+      .match(/(jwt-)(.*)(\??)/g)?.[0]
+      ?.slice(4);
+    const decoded = token ? DECODE_JWT_TOKEN(token) : "";
+    expect(decoded["params"]).toEqual({ var: { title: "Hello world!" } });
+    expect(decoded["path"]).toEqual("/products/1");
+  });
+
+  it("sets default image in JWT with relative URL", () => {
+    const key = "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx";
+    const flyyer0 = new Flyyer({
+      project: "project",
+      path: "path",
+      default: "/static/product/1.png",
+      secret: key,
+      strategy: "JWT",
+      meta: { v: null },
+    });
+
+    const token = flyyer0
+      .href()
+      .match(/(jwt-)(.*)(\??)/g)?.[0]
+      ?.slice(4);
+    const decoded = token ? DECODE_JWT_TOKEN(token) : "";
+    expect(decoded["params"]["def"]).toEqual("/static/product/1.png");
+  });
+
+  it("sets default image in JWT with absolute URL", () => {
+    const key = "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx";
+    const flyyer0 = new Flyyer({
+      project: "project",
+      path: "path",
+      default: "https://flyyer.io/static/product/1.png",
+      secret: key,
+      strategy: "JWT",
+      meta: { v: null },
+    });
+
+    const token = flyyer0
+      .href()
+      .match(/(jwt-)(.*)(\??)/g)?.[0]
+      ?.slice(4);
+    const decoded = token ? DECODE_JWT_TOKEN(token) : "";
+    expect(decoded["params"]["def"]).toEqual("https://flyyer.io/static/product/1.png");
+    expect(decoded["path"]).toEqual("/path");
+    expect(decoded["params"]["var"]).toEqual({});
+  });
+
+  it("encodes URL with JWT and has correct data", () => {
+    const key = "sg1j0HVy9bsMihJqa8Qwu8ZYgCYHG0tx";
+    const flyyer0 = new Flyyer({
+      project: "project",
+      path: "path/to/product",
+      default: "https://flyyer.io/static/product/1.png",
+      secret: key,
+      strategy: "JWT",
+      meta: { id: "h1", height: "200", width: 100, resolution: "90" },
+      variables: { title: "Hello!" },
+    });
+
+    const token = flyyer0
+      .href()
+      .match(/(jwt-)(.*)(\??)/g)?.[0]
+      ?.slice(4);
+    const decoded = token ? DECODE_JWT_TOKEN(token) : "";
+    expect(decoded["params"]).toEqual({
+      i: "h1",
+      h: "200",
+      w: 100,
+      r: "90",
+      def: "https://flyyer.io/static/product/1.png",
+      var: { title: "Hello!" },
+    });
+    expect(decoded["path"]).toEqual("/path/to/product");
   });
 });
