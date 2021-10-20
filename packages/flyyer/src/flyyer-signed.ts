@@ -14,7 +14,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
   public static sign<T>(
     project: FlyyerParams<T>["project"],
     path: string, // normalized
-    params: string,
+    params: string | Record<any, any>,
     strategy: FlyyerParams<T>["strategy"],
     secret: FlyyerParams<T>["secret"],
   ): string | undefined {
@@ -31,7 +31,7 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> extends FlyyerB
       return Flyyer.signHMAC(data, secret);
     }
     if (str === "JWT") {
-      return Flyyer.signJWT({ path, params }, secret);
+      return Flyyer.signJWT({ path: path.startsWith("/") ? path : `/${path}`, params }, secret);
     }
     invariant(false, "Invalid `strategy`. Valid options are `HMAC` or `JWT`.");
   }
