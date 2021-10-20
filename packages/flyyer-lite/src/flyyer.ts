@@ -86,24 +86,38 @@ export class Flyyer<T extends FlyyerVariables = FlyyerVariables> implements Flyy
   public sign(
     project: FlyyerParams<T>["project"],
     path: string, // normalized
-    params: string,
+    params: string | Record<any, any>,
     strategy: FlyyerParams<T>["strategy"],
     secret: FlyyerParams<T>["secret"],
   ): string | undefined | void {}
 
-  public params(extra?: any, options?: IStringifyOptions): string {
+  public params(extra?: any, options?: IStringifyOptions): string | Record<any, any> {
     const meta = this.meta;
-    const defaults = {
-      __v: __V(meta.v),
-      __id: meta.id,
-      _w: meta.width,
-      _h: meta.height,
-      _res: meta.resolution,
-      _ua: meta.agent,
-      _def: this.default,
-      _ext: this.extension,
-    };
-    return toQuery(Object.assign(defaults, this.variables, extra), options);
+    if (this.strategy && this.strategy.toLowerCase() === "jwt") {
+      const jwtDefaults = {
+        i: meta.id,
+        w: meta.width,
+        h: meta.height,
+        r: meta.resolution,
+        u: meta.agent,
+        e: this.extension,
+        def: this.default,
+        var: Object.assign(this.variables, extra),
+      };
+      return jwtDefaults;
+    } else {
+      const defaults = {
+        __v: __V(meta.v),
+        __id: meta.id,
+        _w: meta.width,
+        _h: meta.height,
+        _res: meta.resolution,
+        _ua: meta.agent,
+        _def: this.default,
+        _ext: this.extension,
+      };
+      return toQuery(Object.assign(defaults, this.variables, extra), options);
+    }
   }
 
   /**
